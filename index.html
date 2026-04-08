@@ -14,7 +14,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(91,33,182,.97);backdrop-fi
 .logo{display:flex;align-items:center;gap:8px;margin-right:18px;white-space:nowrap}
 .logo-text{font-size:.9rem;font-weight:800;color:#fff}
 .logo-dot{width:8px;height:8px;border-radius:50%;background:#10b981}
-.nb{height:54px;padding:0 13px;background:transparent;border:none;color:rgba(255,255,255,.6);font-family:'Plus Jakarta Sans',sans-serif;font-size:.72rem;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap}
+.nb{height:54px;padding:0 12px;background:transparent;border:none;color:rgba(255,255,255,.6);font-family:'Plus Jakarta Sans',sans-serif;font-size:.7rem;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap}
 .nb:hover{color:#fff}.nb.active{color:#fff;border-bottom-color:#10b981}
 .nav-right{margin-left:auto;display:flex;align-items:center;gap:8px;white-space:nowrap}
 .sbtn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:8px;color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-size:.7rem;font-weight:600;padding:6px 12px;cursor:pointer}
@@ -37,7 +37,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(91,33,182,.97);backdrop-fi
 .kpi:hover{border-color:var(--bd2);transform:translateY(-1px)}
 .kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--c,var(--pu)),transparent)}
 .kl{font-size:.67rem;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:1px;margin-bottom:7px}
-.kv{font-size:1.45rem;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--tx);line-height:1}
+.kv{font-size:1.35rem;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--tx);line-height:1}
 .ks{font-size:.67rem;color:var(--mu);margin-top:5px}
 .ki{width:30px;height:30px;border-radius:8px;font-size:.95rem;position:absolute;top:14px;right:14px;display:flex;align-items:center;justify-content:center}
 .rg{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
@@ -60,10 +60,10 @@ nav{position:sticky;top:0;z-index:100;background:rgba(91,33,182,.97);backdrop-fi
 .rbtn{padding:4px 12px;border-radius:20px;font-size:.71rem;font-weight:600;cursor:pointer;border:1.5px solid var(--bd2);background:transparent;color:var(--mu)}
 .rbtn:hover{border-color:var(--rd);color:var(--rd)}
 .tw{overflow-x:auto;border-radius:10px;border:1.5px solid var(--bd);margin-bottom:14px;background:var(--s)}
-table{width:100%;border-collapse:collapse;font-size:.73rem}
-thead th{background:var(--s3);color:var(--pu);font-weight:700;padding:8px 11px;text-align:right;font-size:.67rem;white-space:nowrap;position:sticky;top:0;z-index:1}
+table{width:100%;border-collapse:collapse;font-size:.72rem}
+thead th{background:var(--s3);color:var(--pu);font-weight:700;padding:8px 10px;text-align:right;font-size:.67rem;white-space:nowrap;position:sticky;top:0;z-index:1}
 thead th:first-child{text-align:left;position:sticky;left:0;background:var(--s3);z-index:2}
-tbody td{padding:6px 11px;border-bottom:1px solid var(--bd);text-align:right;font-family:'JetBrains Mono',monospace;font-size:.71rem;white-space:nowrap;color:var(--tx)}
+tbody td{padding:6px 10px;border-bottom:1px solid var(--bd);text-align:right;font-family:'JetBrains Mono',monospace;font-size:.7rem;white-space:nowrap;color:var(--tx)}
 tbody td:first-child{text-align:left;font-family:'Plus Jakarta Sans',sans-serif;color:var(--tx2);font-weight:500;position:sticky;left:0;background:var(--s)}
 tr.tot td{font-weight:700;background:var(--p3)!important;color:var(--pu)!important}
 tr.tot td:first-child{background:var(--p3)!important}
@@ -84,23 +84,32 @@ tfoot tr.tf td{font-weight:800;background:var(--s3)!important;color:var(--pu)!im
 select{background:var(--s2);border:1.5px solid var(--bd2);color:var(--tx);padding:4px 8px;border-radius:8px;font-size:.71rem;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600}
 .bdg{display:inline-block;padding:2px 7px;border-radius:4px;font-size:.66rem;font-weight:700}
 .b2cd{background:#dbeafe;color:#1d4ed8}.b2bd{background:#d1fae5;color:#065f46}.b2gd{background:#fef3c7;color:#92400e}
+/* Comparison tab */
+.cmp-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.cmp-card{background:var(--s);border:1.5px solid var(--bd);border-radius:14px;padding:16px}
+.cmp-title{font-size:.8rem;font-weight:700;color:var(--pu);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--bd)}
+.delta-pos{color:var(--gn);font-weight:700}
+.delta-neg{color:var(--rd);font-weight:700}
 </style>
 </head>
 <body>
 <nav>
   <div class="logo"><div class="logo-dot"></div><span class="logo-text">aanaab Finance</span></div>
-  <button class="nb active" onclick="showPage('p1',this)">📊 Daily Dashboard</button>
+  <button class="nb active" onclick="showPage('p1',this)">📊 Daily</button>
   <button class="nb" onclick="showPage('p2',this);loadTab('p2')">📈 Revenue</button>
-  <button class="nb" onclick="showPage('p3',this);loadTab('p3')">📋 P&amp;L Monthly</button>
+  <button class="nb" onclick="showPage('p2c',this);loadTab('p2c')">🔄 Rev Compare</button>
+  <button class="nb" onclick="showPage('p3',this);loadTab('p3')">📋 P&amp;L</button>
+  <button class="nb" onclick="showPage('p3c',this);loadTab('p3c')">🔄 P&amp;L Compare</button>
   <button class="nb" onclick="showPage('p4',this);loadTab('p4')">🎯 Rev vs Target</button>
   <button class="nb" onclick="showPage('p5',this);loadTab('p5')">💼 Spend vs Budget</button>
   <div class="nav-right">
-    <button class="sbtn" onclick="syncAll()">🔄 Sync All</button>
+    <button class="sbtn" onclick="syncAll()">🔄 Sync</button>
     <span class="ldot" id="dot"></span>
     <span class="slbl" id="slbl">Connecting...</span>
   </div>
 </nav>
 
+<!-- P1: DAILY DASHBOARD -->
 <div class="page active" id="p1">
   <div class="pt">Daily Dashboard</div>
   <div class="ps">Key financial metrics · <span id="lbl">Loading...</span></div>
@@ -111,10 +120,11 @@ select{background:var(--s2);border:1.5px solid var(--bd2);color:var(--tx);paddin
     <div class="kpi" style="--c:#3b82f6"><div class="ki" style="background:#dbeafe">👥</div><div class="kl">Receivables</div><div class="kv" id="d-ar">—</div><div class="ks">SAR · 120010 + 120012</div></div>
     <div class="kpi" style="--c:#f59e0b"><div class="ki" style="background:#fef3c7">🏪</div><div class="kl">Payables</div><div class="kv" id="d-ap">—</div><div class="ks">SAR · Account 200010</div></div>
   </div>
-  <div class="g3">
+  <div class="g4">
     <div class="kpi" style="--c:#ef4444"><div class="ki" style="background:#fee2e2">🏛️</div><div class="kl">Short Term Loans</div><div class="kv" id="d-st">—</div><div class="ks">SAR · Account 265020</div></div>
     <div class="kpi" style="--c:#dc2626"><div class="ki" style="background:#fee2e2">🏛️</div><div class="kl">Long Term Loans</div><div class="kv" id="d-lt">—</div><div class="ks">SAR · Account 265070</div></div>
     <div class="kpi" style="--c:#10b981"><div class="ki" style="background:#d1fae5">📊</div><div class="kl">Net Position</div><div class="kv" id="d-net">—</div><div class="ks">SAR · Bank − Total Loans</div></div>
+    <div class="kpi" style="--c:#06b6d4"><div class="ki" style="background:#cffafe">⏱️</div><div class="kl">Cash Runway</div><div class="kv" id="d-runway">—</div><div class="ks">months · at 1.2M/month burn rate</div></div>
   </div>
   <div class="st">Financial Ratios</div>
   <div class="rg">
@@ -126,81 +136,44 @@ select{background:var(--s2);border:1.5px solid var(--bd2);color:var(--tx);paddin
   <div class="cc"><div class="ct">Revenue & Profit Trend <span class="cs">2026</span></div><div style="height:230px"><canvas id="c-trend"></canvas></div></div>
 </div>
 
+<!-- P2: REVENUE -->
 <div class="page" id="p2"><div class="pt">Revenue Analysis</div><div class="ps">All years · Revenue stream analysis</div><div id="p2c"><div class="ld"><span class="spin"></span>Loading...</div></div></div>
+
+<!-- P2C: REVENUE COMPARE -->
+<div class="page" id="p2c"><div class="pt">Revenue Comparison</div><div class="ps">Compare two periods side by side</div><div id="p2cc"><div class="ld"><span class="spin"></span>Loading...</div></div></div>
+
+<!-- P3: P&L -->
 <div class="page" id="p3"><div class="pt">P&L Monthly</div><div class="ps">P&L sheet · all months 2019→2026</div><div id="p3c"><div class="ld"><span class="spin"></span>Loading...</div></div></div>
+
+<!-- P3C: P&L COMPARE -->
+<div class="page" id="p3c"><div class="pt">P&L Comparison</div><div class="ps">Compare two periods side by side</div><div id="p3cc"><div class="ld"><span class="spin"></span>Loading...</div></div></div>
+
+<!-- P4: REV VS TARGET -->
 <div class="page" id="p4"><div class="pt">Revenue vs Target 2026</div><div class="ps">YTD vs annual targets</div><div id="p4c"><div class="ld"><span class="spin"></span>Loading...</div></div></div>
+
+<!-- P5: BUDGET -->
 <div class="page" id="p5"><div class="pt">Actual Spend vs Budget 2026</div><div class="ps">Actual spend Vs Budget 2026 sheet</div><div id="p5c"><div class="ld"><span class="spin"></span>Loading...</div></div></div>
 
 <script>
-// ============================================================
-// SHEET CONFIG — using GID (most reliable method)
-// ============================================================
-const SID = '1EBs2pDABCo5erIJ-DL2SOrhcNkp2ZyovRoAxNDw0GhM';
-
-// GIDs from Google Sheets (hex to decimal)
-// y=Trial Balance, 1e=Balance Sheet, 1u=Income Statement
-// 2a=P&L, 2q=Cash Flow 2026, 36=Revenue stream analysis
-// 3m=Rev YTD Vs Target 2026, 42=Actual spend Vs Budget 2026
-const GIDS = {
-  'Trial Balance':        parseInt('y',  36),   // 34
-  'Balance Sheet':        parseInt('1e', 36),   // 50
-  'Income Statement':     parseInt('1u', 36),   // 66
-  'P&L':                  parseInt('2a', 36),   // 82
-  'Revenue stream analysis': parseInt('36', 36), // 114
-  'Rev YTD Vs Target 2026':  parseInt('3m', 36), // 130
-  'Actual spend Vs Budget 2026': parseInt('42', 36) // 146
-};
-
-// Use export CSV with GID — bypasses sheet name encoding issues
-function csvUrl(sheetName) {
-  const gid = GIDS[sheetName];
-  return `https://docs.google.com/spreadsheets/d/${SID}/export?format=csv&gid=${gid}`;
-}
-
-// Fallback: use gviz with sheet name
-function csvUrlFallback(sheetName) {
-  return `https://docs.google.com/spreadsheets/d/${SID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
-}
-
-async function gcsv(sheetName) {
-  // Try GID-based URL first
-  try {
-    const url = csvUrl(sheetName);
-    const r = await fetch(url);
-    if (r.ok) {
-      const text = await r.text();
-      if (text && text.length > 10 && !text.includes('<!DOCTYPE')) {
-        return parseCSV(text);
-      }
-    }
-  } catch(e) {}
-  
-  // Fallback to name-based URL
-  const r2 = await fetch(csvUrlFallback(sheetName));
-  if (!r2.ok) throw new Error('HTTP ' + r2.status + ' for ' + sheetName);
-  return parseCSV(await r2.text());
-}
+const SID='1EBs2pDABCo5erIJ-DL2SOrhcNkp2ZyovRoAxNDw0GhM';
+const BASE=`https://docs.google.com/spreadsheets/d/${SID}/gviz/tq?tqx=out:csv&sheet=`;
+const loaded={},CH={};
+const BURN_RATE=1200000; // 1.2M/month
+const C={pu:'#5b21b6',p2:'#7c3aed',gn:'#10b981',bl:'#3b82f6',am:'#f59e0b',rd:'#ef4444',b2c:'#3b82f6',b2b:'#10b981',b2g:'#f59e0b',gr:'#e2deff',tc:'#9ca3af'};
+const MN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
 // ============================================================
-// ROBUST CSV PARSER
+// CSV PARSING
 // ============================================================
-function parseCSV(text) {
-  const rows = [];
-  const lines = text.split('\n');
-  for (const line of lines) {
-    const cells = [];
-    let cell = '', inQ = false;
-    for (let i = 0; i < line.length; i++) {
-      const c = line[i];
-      if (c === '"') {
-        if (inQ && line[i+1] === '"') { cell += '"'; i++; }
-        else inQ = !inQ;
-      } else if (c === ',' && !inQ) {
-        cells.push(cell.trim());
-        cell = '';
-      } else {
-        cell += c;
-      }
+function parseCSV(text){
+  const rows=[];
+  for(const line of text.split('\n')){
+    const cells=[];let cell='',inQ=false;
+    for(let i=0;i<line.length;i++){
+      const c=line[i];
+      if(c==='"'){if(inQ&&line[i+1]==='"'){cell+='"';i++;}else inQ=!inQ;}
+      else if(c===','&&!inQ){cells.push(cell.trim());cell='';}
+      else cell+=c;
     }
     cells.push(cell.trim());
     rows.push(cells);
@@ -208,357 +181,413 @@ function parseCSV(text) {
   return rows;
 }
 
-// ============================================================
-// DATE PARSER — handles all Google Sheets CSV date formats
-// ============================================================
-const MN = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-
-function parseD(raw) {
-  if (!raw) return null;
-  const s = String(raw).replace(/^"|"$/g, '').trim();
-  if (!s || s === 'null') return null;
-  
-  // "Mar 2019"
-  if (/^[A-Za-z]{3}\s+\d{4}$/.test(s)) return s;
-  
-  // "2019-03-01" or "2019-03-01 00:00:00"
-  const iso = s.match(/^(\d{4})-(\d{2})-\d{2}/);
-  if (iso) return MN[parseInt(iso[2])-1] + ' ' + iso[1];
-  
-  // "3/1/2019"
-  const us = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
-  if (us) return MN[parseInt(us[1])-1] + ' ' + us[3];
-  
+function parseD(raw){
+  if(!raw)return null;
+  const s=String(raw).replace(/^"|"$/g,'').trim();
+  if(!s||s==='null')return null;
+  if(/^[A-Za-z]{3}\s+\d{4}$/.test(s))return s;
+  const iso=s.match(/^(\d{4})-(\d{2})-\d{2}/);
+  if(iso)return MN[parseInt(iso[2])-1]+' '+iso[1];
+  const us=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if(us)return MN[parseInt(us[1])-1]+' '+us[3];
   return null;
+}
+
+async function gcsv(sheet){
+  const r=await fetch(BASE+encodeURIComponent(sheet));
+  if(!r.ok)throw new Error('HTTP '+r.status+' for '+sheet);
+  return parseCSV(await r.text());
 }
 
 // ============================================================
 // HELPERS
 // ============================================================
-const loaded = {}, CH = {};
-const C = {pu:'#5b21b6',p2:'#7c3aed',gn:'#10b981',bl:'#3b82f6',am:'#f59e0b',rd:'#ef4444',b2c:'#3b82f6',b2b:'#10b981',b2g:'#f59e0b',gr:'#e2deff',tc:'#9ca3af'};
-
-const pn = v => parseFloat(String(v||'0').replace(/,/g,'').replace(/^"|"$/g,'')) || 0;
+const pn=v=>parseFloat(String(v||'0').replace(/,/g,'').replace(/^"|"$/g,''))||0;
 function fmtK(n){if(!n&&n!==0)return'—';const s=n<0?'-':'',a=Math.abs(n);if(a>=1e6)return s+(a/1e6).toFixed(2)+'M';if(a>=1e3)return s+(a/1e3).toFixed(1)+'K';return s+Math.round(a).toLocaleString();}
-const fmt = n => new Intl.NumberFormat('en-US',{maximumFractionDigits:0}).format(Math.round(n||0));
-const pcC = p => p>=50?C.gn:p>=20?C.am:C.rd;
-const dc = id => { if(CH[id]){CH[id].destroy();delete CH[id];}};
+const fmt=n=>new Intl.NumberFormat('en-US',{maximumFractionDigits:0}).format(Math.round(n||0));
+const pcC=p=>p>=50?C.gn:p>=20?C.am:C.rd;
+const dc=id=>{if(CH[id]){CH[id].destroy();delete CH[id];}};
 function showPage(id,btn){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));document.getElementById(id).classList.add('active');btn.classList.add('active');}
-function loadTab(id){if(loaded[id])return;loaded[id]=true;({p2:loadRevenue,p3:loadPL,p4:loadRevTarget,p5:loadBudget})[id]();}
-const errEl = (id,msg) => document.getElementById(id).innerHTML = `<div class="ld" style="color:var(--rd)">❌ ${msg}</div>`;
-function copts(){return{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:C.tc,font:{size:11,family:'Plus Jakarta Sans'}}}},scales:{x:{ticks:{color:C.tc,font:{size:10},maxRotation:45},grid:{color:C.gr}},y:{ticks:{color:C.tc,font:{size:10},callback:v=>fmtK(v)},grid:{color:C.gr}}}};}
+function loadTab(id){if(loaded[id])return;loaded[id]=true;({p2:loadRevenue,'p2c':loadRevCompare,p3:loadPL,'p3c':loadPLCompare,p4:loadRevTarget,p5:loadBudget})[id]?.();}
+const errEl=(id,msg)=>document.getElementById(id).innerHTML=`<div class="ld" style="color:var(--rd)">❌ ${msg}</div>`;
+function copts(stacked){const o={responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:C.tc,font:{size:11,family:'Plus Jakarta Sans'}}}},scales:{x:{ticks:{color:C.tc,font:{size:10},maxRotation:45},grid:{color:C.gr}},y:{ticks:{color:C.tc,font:{size:10},callback:v=>fmtK(v)},grid:{color:C.gr}}}};if(stacked){o.scales.x.stacked=true;o.scales.y.stacked=true;}return o;}
 
-function syncAll(){
-  Object.keys(loaded).forEach(k=>delete loaded[k]);
-  loadDashboard();
-  const at = document.querySelector('.page.active')?.id;
-  if(at && at!=='p1'){loaded[at]=false;loadTab(at);}
+function getYrIdx(dC,yr){return dC.map((c,i)=>c.label.includes(yr)?i:-1).filter(i=>i>=0);}
+function getQIdx(dC,q,yr){
+  const qMonths={Q1:['Jan','Feb','Mar'],Q2:['Apr','May','Jun'],Q3:['Jul','Aug','Sep'],Q4:['Oct','Nov','Dec']};
+  const ms=qMonths[q]||[];
+  return dC.map((c,i)=>{const [m,y]=c.label.split(' ');return y===yr&&ms.includes(m)?i:-1;}).filter(i=>i>=0);
 }
+function get26Idx(dC){return getYrIdx(dC,'2026');}
+
+function syncAll(){Object.keys(loaded).forEach(k=>delete loaded[k]);loadDashboard();const at=document.querySelector('.page.active')?.id;if(at&&at!=='p1'){loaded[at]=false;loadTab(at);}}
 
 // ============================================================
 // P1: DAILY DASHBOARD
 // ============================================================
-async function loadDashboard() {
-  try {
-    document.getElementById('slbl').textContent = 'Loading...';
-    
-    const [tb, bs, pl] = await Promise.all([
-      gcsv('Trial Balance'),
-      gcsv('Balance Sheet'),
-      gcsv('P&L')
-    ]);
+async function loadDashboard(){
+  try{
+    document.getElementById('slbl').textContent='Loading...';
+    const[tb,bs,pl]=await Promise.all([gcsv('Trial Balance'),gcsv('Balance Sheet'),gcsv('P&L')]);
 
-    // --- TRIAL BALANCE ---
-    // Find date columns (index 4+)
-    const tbH = tb[0];
-    const tbCols = [];
-    for(let i=4; i<tbH.length; i++) {
-      const d = parseD(tbH[i]);
-      if(d) tbCols.push({label:d, i});
-    }
-    
-    // Find latest non-zero column
-    const tbData = tb.slice(1).filter(r => r && r[1] && pn(r[1]) > 0);
-    let latest = tbCols[tbCols.length-1];
-    for(let k=tbCols.length-1; k>=0; k--) {
-      if(tbData.some(r => Math.abs(pn(r[tbCols[k].i])) > 0.01)) {
-        latest = tbCols[k];
-        break;
-      }
-    }
-    
-    document.getElementById('lbl').textContent = latest.label;
-    document.getElementById('slbl').textContent = 'Live · ' + latest.label;
-    
-    const ga = code => {
-      const r = tbData.find(r => String(r[1]).replace(/"/g,'').trim() === String(code));
-      return r ? pn(r[latest.i]) : 0;
-    };
-    
-    const bank = [100001,100002,100003,100004,100006,100007].reduce((s,c)=>s+ga(c),0);
-    const alr=ga(100002), ar=ga(120010)+ga(120012), ap=ga(200010), st=ga(265020), lt=ga(265070), net=bank-(st+lt);
-    
+    // TB date cols
+    const tbH=tb[0];
+    const tbCols=[];
+    for(let i=4;i<tbH.length;i++){const d=parseD(tbH[i]);if(d)tbCols.push({label:d,i});}
+    const tbData=tb.slice(1).filter(r=>r&&r[1]&&pn(r[1])>0);
+    let latest=tbCols[tbCols.length-1];
+    for(let k=tbCols.length-1;k>=0;k--){if(tbData.some(r=>Math.abs(pn(r[tbCols[k].i]))>0.01)){latest=tbCols[k];break;}}
+
+    document.getElementById('lbl').textContent=latest.label;
+    document.getElementById('slbl').textContent='Live · '+latest.label;
+
+    const ga=code=>{const r=tbData.find(r=>String(r[1]).replace(/"/g,'').trim()===String(code));return r?pn(r[latest.i]):0;};
+    const bank=[100001,100002,100003,100004,100006,100007].reduce((s,c)=>s+ga(c),0);
+    const alr=ga(100002),ar=ga(120010)+ga(120012),ap=ga(200010),st=ga(265020),lt=ga(265070),net=bank-(st+lt);
     [['d-bank',bank],['d-alriyad',alr],['d-ar',ar],['d-ap',ap],['d-st',st],['d-lt',lt]].forEach(([id,v])=>document.getElementById(id).textContent=fmtK(v)+' SAR');
-    const nel=document.getElementById('d-net'); nel.textContent=fmtK(net)+' SAR'; nel.style.color=net>=0?C.gn:C.rd;
+    const nel=document.getElementById('d-net');nel.textContent=fmtK(net)+' SAR';nel.style.color=net>=0?C.gn:C.rd;
 
-    // --- BALANCE SHEET RATIOS ---
-    const bsH = bs[0];
-    const bsCols = [];
-    for(let i=4; i<bsH.length; i++) {
-      const d = parseD(bsH[i]);
-      if(d) bsCols.push({label:d,i});
-    }
-    const bsLatest = bsCols.find(c=>c.label===latest.label) || bsCols[bsCols.length-1];
-    const bsData = bs.slice(1).filter(r=>r&&r[3]);
-    const gts = types => bsData.filter(r=>types.includes(String(r[3]).replace(/"/g,'').trim())).reduce((s,r)=>s+pn(r[bsLatest.i]),0);
+    // Cash Runway = bank / burn rate
+    const runway=bank/BURN_RATE;
+    const rel=document.getElementById('d-runway');
+    rel.textContent=runway.toFixed(1)+' months';
+    rel.style.color=runway>=6?C.gn:runway>=3?C.am:C.rd;
+
+    // BS ratios
+    const bsH=bs[0];const bsCols=[];
+    for(let i=4;i<bsH.length;i++){const d=parseD(bsH[i]);if(d)bsCols.push({label:d,i});}
+    const bsL=bsCols.find(c=>c.label===latest.label)||bsCols[bsCols.length-1];
+    const bsData=bs.slice(1).filter(r=>r&&r[3]);
+    const gts=types=>bsData.filter(r=>types.includes(String(r[3]).replace(/"/g,'').trim())).reduce((s,r)=>s+pn(r[bsL.i]),0);
     const ca=gts(['asset_receivable','asset_cash','asset_current','asset_prepayments']);
     const cl=gts(['liability_payable','liability_credit_card','liability_current']);
-    const ncl=gts(['liability_non_current']), eq=gts(['equity','equity_unaffected']);
-    setR('r-cr', cl>0?(ca/cl).toFixed(2)+'x':'—', cl>0&&ca/cl>=1.5);
-    setR('r-de', eq>0?((cl+ncl)/eq).toFixed(2)+'x':'—', eq>0&&(cl+ncl)/eq<=1);
+    const ncl=gts(['liability_non_current']),eq=gts(['equity','equity_unaffected']);
+    setR('r-cr',cl>0?(ca/cl).toFixed(2)+'x':'—',cl>0&&ca/cl>=1.5);
+    setR('r-de',eq>0?((cl+ncl)/eq).toFixed(2)+'x':'—',eq>0&&(cl+ncl)/eq<=1);
 
-    // --- P&L FOR TREND + MARGINS ---
-    const plH = pl[0];
-    const plCols = [];
-    for(let i=2; i<plH.length; i++) {
-      const d = parseD(plH[i]);
-      if(d) plCols.push({label:d,i});
-    }
-    
-    const gpr = key => pl.find(r=>r&&r[0]&&String(r[0]).replace(/"/g,'').trim()===key);
-    const gpv = row => row ? plCols.map(c=>pn(row[c.i])) : plCols.map(()=>0);
-    
-    const rv = gpv(gpr('income'));
-    const gpa = gpv(gpr('Discount'));
-    const np = gpv(pl[pl.length-1]);
-    
-    // 2026 indices
-    const p26 = plCols.map((c,i)=>c.label.includes('2026')?i:-1).filter(i=>i>=0);
-    const l26 = p26.map(i=>plCols[i].label);
-    
-    // Latest non-zero for margins
-    let mi = plCols.length-1;
-    while(mi>0 && Math.abs(rv[mi])<1) mi--;
-    setR('r-gm', rv[mi]?(gpa[mi]/rv[mi]*100).toFixed(1)+'%':'—', rv[mi]>0&&gpa[mi]>=0);
-    setR('r-nm', rv[mi]?(np[mi]/rv[mi]*100).toFixed(1)+'%':'—', rv[mi]>0&&np[mi]>=0);
-    
-    dc('trend');
-    CH['trend'] = new Chart(document.getElementById('c-trend').getContext('2d'), {
-      type:'bar', data:{labels:l26, datasets:[
-        {label:'Revenue',     data:p26.map(i=>rv[i]),  backgroundColor:'rgba(91,33,182,.55)',borderRadius:5,order:2},
-        {label:'Gross Profit',data:p26.map(i=>gpa[i]), type:'line',borderColor:C.gn,borderWidth:2.5,pointRadius:3,tension:.3,fill:false,order:1},
-        {label:'Net Profit',  data:p26.map(i=>np[i]),  type:'line',borderColor:C.am,borderWidth:2.5,pointRadius:3,tension:.3,fill:false,order:0},
-      ]}, options:copts()
+    // P&L
+    const plH=pl[0];const plCols=[];
+    for(let i=2;i<plH.length;i++){const d=parseD(plH[i]);if(d)plCols.push({label:d,i});}
+    const gpr=key=>pl.find(r=>r&&r[0]&&String(r[0]).replace(/"/g,'').trim()===key);
+    const gpv=row=>row?plCols.map(c=>pn(row[c.i])):plCols.map(()=>0);
+    const rv=gpv(gpr('income')),gpa=gpv(gpr('Discount')),np=gpv(pl[pl.length-1]);
+    const p26=plCols.map((c,i)=>c.label.includes('2026')?i:-1).filter(i=>i>=0);
+    let mi=plCols.length-1;while(mi>0&&Math.abs(rv[mi])<1)mi--;
+    setR('r-gm',rv[mi]?(gpa[mi]/rv[mi]*100).toFixed(1)+'%':'—',rv[mi]>0&&gpa[mi]>=0);
+    setR('r-nm',rv[mi]?(np[mi]/rv[mi]*100).toFixed(1)+'%':'—',rv[mi]>0&&np[mi]>=0);
+
+    dc('trend');CH['trend']=new Chart(document.getElementById('c-trend').getContext('2d'),{
+      type:'bar',data:{labels:p26.map(i=>plCols[i].label),datasets:[
+        {label:'Revenue',data:p26.map(i=>rv[i]),backgroundColor:'rgba(91,33,182,.55)',borderRadius:5,order:2},
+        {label:'Gross Profit',data:p26.map(i=>gpa[i]),type:'line',borderColor:C.gn,borderWidth:2.5,pointRadius:3,tension:.3,fill:false,order:1},
+        {label:'Net Profit',data:p26.map(i=>np[i]),type:'line',borderColor:C.am,borderWidth:2.5,pointRadius:3,tension:.3,fill:false,order:0},
+      ]},options:copts()
     });
-    document.getElementById('dot').className = 'ldot';
-  } catch(e) {
-    console.error('Dashboard error:', e);
-    document.getElementById('slbl').textContent = 'Error: '+e.message;
-    document.getElementById('dot').className = 'ldot err';
-  }
+    document.getElementById('dot').className='ldot';
+  }catch(e){console.error(e);document.getElementById('slbl').textContent='Error: '+e.message;document.getElementById('dot').className='ldot err';}
 }
 function setR(id,v,good){const el=document.getElementById(id);el.textContent=v;el.style.color=good?C.gn:C.rd;}
 
 // ============================================================
-// P2: REVENUE — correct row mapping
-// RSA has dates starting from col 1 (col 0 = "Items (SAR)")
-// B2C products: rows 1-5, total: row 6
-// B2B products: rows 9-11, total: row 12
-// B2G projects: rows 15-38 (non-empty), total: row 39
+// LOAD RSA DATA (shared between Revenue and Compare tabs)
 // ============================================================
-window._RS = {seg:'all', yr:'all', projs:new Set()};
+async function loadRSAData(){
+  if(window._RD)return window._RD;
+  const raw=await gcsv('Revenue stream analysis');
+  const hdr=raw[0];
+  const dC=[];
+  for(let i=1;i<hdr.length;i++){const d=parseD(hdr[i]);if(d)dC.push({label:d,i});}
+  const years=[...new Set(dC.map(c=>c.label.split(' ')[1]).filter(Boolean))].sort();
+  const quarters=['Q1','Q2','Q3','Q4'];
 
-async function loadRevenue() {
-  try {
-    const raw = await gcsv('Revenue stream analysis');
-    
-    // Parse date columns (start at col 1)
-    const hdr = raw[0];
-    const dC = [];
-    for(let i=1; i<hdr.length; i++) {
-      const d = parseD(hdr[i]);
-      if(d) dC.push({label:d, i});
-    }
-    
-    const years = [...new Set(dC.map(c=>c.label.split(' ')[1]).filter(Boolean))].sort();
-    
-    function makeRow(r, seg) {
-      if(!r) return null;
-      const name = String(r[0]||'').replace(/^"|"$/g,'').trim();
-      if(!name || name==='Items (SAR)' || name==='null') return null;
-      const vals = dC.map(c => pn(r[c.i]));
-      if(vals.every(v=>v===0)) return null; // skip empty
-      return {name, vals, seg};
-    }
-    
-    const B2C = [1,2,3,4,5].map(i=>makeRow(raw[i],'B2C')).filter(Boolean);
-    const B2B = [9,10,11].map(i=>makeRow(raw[i],'B2B')).filter(Boolean);
-    const B2G = [];
-    for(let i=15; i<=38; i++) {
-      const r = makeRow(raw[i],'B2G');
-      if(r) B2G.push(r);
-    }
-    
-    window._RD = {dC, years, B2C, B2B, B2G};
-    renderRevenue();
-  } catch(e) {
-    errEl('p2c', 'Error loading Revenue: ' + e.message);
-    console.error('Revenue error:', e);
+  function makeRow(r,seg){
+    if(!r)return null;
+    const name=String(r[0]||'').replace(/^"|"$/g,'').trim();
+    if(!name||name==='Items (SAR)'||name==='null')return null;
+    const vals=dC.map(c=>pn(r[c.i]));
+    if(vals.every(v=>v===0))return null;
+    return{name,vals,seg};
   }
+
+  const B2C=[1,2,3,4,5].map(i=>makeRow(raw[i],'B2C')).filter(Boolean);
+  const B2B=[9,10,11].map(i=>makeRow(raw[i],'B2B')).filter(Boolean);
+  const B2G=[];
+  for(let i=15;i<=38;i++){const r=makeRow(raw[i],'B2G');if(r)B2G.push(r);}
+
+  window._RD={dC,years,quarters,B2C,B2B,B2G};
+  return window._RD;
 }
 
-function yIdx(dC, yr) { return dC.map((c,i)=>c.label.includes(yr)?i:-1).filter(i=>i>=0); }
-function idx26(dC) { return yIdx(dC,'2026'); }
+// ============================================================
+// P2: REVENUE — all years, correct B2G, year filter updates tables
+// ============================================================
+window._RS={seg:'all',yr:'all',q:'all',projs:new Set()};
 
-function renderRevenue() {
-  const {dC, years, B2C, B2B, B2G} = window._RD;
-  const SC = {B2C:C.b2c, B2B:C.b2b, B2G:C.b2g};
-  const st = window._RS;
-  
-  // Apply filters
-  const fp = {B2C:[], B2B:[], B2G:[]};
-  const allSrc = {B2C, B2B, B2G};
-  ['B2C','B2B','B2G'].forEach(s => {
-    if(st.seg!=='all' && st.seg!==s) return;
-    fp[s] = allSrc[s].filter(p => st.projs.size===0 || st.projs.has(p.name));
+async function loadRevenue(){
+  try{
+    await loadRSAData();
+    renderRevenue();
+  }catch(e){errEl('p2c','Error: '+e.message);console.error(e);}
+}
+
+function getRevIdx(dC,yr,q){
+  if(yr==='all')return dC.map((_,i)=>i);
+  if(q==='all')return getYrIdx(dC,yr);
+  return getQIdx(dC,q,yr);
+}
+
+function renderRevenue(){
+  const{dC,years,quarters,B2C,B2B,B2G}=window._RD;
+  const SC={B2C:C.b2c,B2B:C.b2b,B2G:C.b2g};
+  const st=window._RS;
+
+  const fp={B2C:[],B2B:[],B2G:[]};
+  [{B2C},{B2B},{B2G}].forEach(obj=>{
+    const s=Object.keys(obj)[0];
+    if(st.seg!=='all'&&st.seg!==s)return;
+    fp[s]=obj[s].filter(p=>st.projs.size===0||st.projs.has(p.name));
   });
-  
-  const allP = [...B2C, ...B2B, ...B2G];
-  const ix26 = idx26(dC);
-  const l26 = ix26.map(i=>dC[i].label);
-  
-  // Display: filter by selected year
-  const dispIdx = st.yr==='all' ? dC.map((_,i)=>i) : yIdx(dC, st.yr);
-  const dispL = dispIdx.map(i=>dC[i].label);
-  
-  const ytd26 = prods => prods.reduce((t,p)=>t+ix26.reduce((s,i)=>s+(p.vals[i]||0),0),0);
-  const sumYr = (prods,yr) => { const yi=yIdx(dC,yr); return prods.reduce((t,p)=>t+yi.reduce((s,i)=>s+(p.vals[i]||0),0),0); };
-  const yt = {B2C:ytd26(fp.B2C), B2B:ytd26(fp.B2B), B2G:ytd26(fp.B2G)};
-  const tot26 = yt.B2C+yt.B2B+yt.B2G;
 
-  document.getElementById('p2c').innerHTML = `
+  const allP=[...B2C,...B2B,...B2G];
+
+  // Display indices for tables (based on year + quarter filter)
+  const dispIdx=getRevIdx(dC,st.yr,st.q);
+  const dispL=dispIdx.map(i=>dC[i].label);
+
+  // 2026 for KPIs/charts
+  const ix26=get26Idx(dC);
+  const l26=ix26.map(i=>dC[i].label);
+
+  const sumIdx=(prods,idxs)=>prods.reduce((t,p)=>t+idxs.reduce((s,i)=>s+(p.vals[i]||0),0),0);
+  const ytd26={B2C:sumIdx(fp.B2C,ix26),B2B:sumIdx(fp.B2B,ix26),B2G:sumIdx(fp.B2G,ix26)};
+  const tot26=ytd26.B2C+ytd26.B2B+ytd26.B2G;
+
+  const sumYr=(prods,yr)=>{const yi=getYrIdx(dC,yr);return sumIdx(prods,yi);};
+
+  document.getElementById('p2c').innerHTML=`
   <div class="fb">
-    <div class="fg">
-      <div class="fl">Segment</div>
-      <div class="chips">
-        <span class="chip ${st.seg==='all'?'on':''}" onclick="setRF('seg','all')">All</span>
-        <span class="chip cb ${st.seg==='B2C'?'on':''}" onclick="setRF('seg','B2C')">B2C</span>
-        <span class="chip cg ${st.seg==='B2B'?'on':''}" onclick="setRF('seg','B2B')">B2B</span>
-        <span class="chip ca ${st.seg==='B2G'?'on':''}" onclick="setRF('seg','B2G')">B2G</span>
-      </div>
-    </div>
-    <div class="fg">
-      <div class="fl">Year</div>
-      <div class="chips">
-        <span class="chip ${st.yr==='all'?'on':''}" onclick="setRF('yr','all')">All Years</span>
-        ${years.map(y=>`<span class="chip ${st.yr===y?'on':''}" onclick="setRF('yr','${y}')">${y}</span>`).join('')}
-      </div>
-    </div>
-    <div class="fg" style="flex:1;min-width:0">
-      <div class="fl">Product / Project</div>
-      <div class="chips">${allP.map(p=>`<span class="chip ${st.projs.has(p.name)?'on':''}" onclick="setRF('proj','${p.name.replace(/'/g,"\\'")}')"><span class="bdg ${p.seg.toLowerCase()}d" style="margin-right:3px">${p.seg}</span>${p.name}</span>`).join('')}</div>
-    </div>
+    <div class="fg"><div class="fl">Segment</div><div class="chips">
+      <span class="chip ${st.seg==='all'?'on':''}" onclick="setRF('seg','all')">All</span>
+      <span class="chip cb ${st.seg==='B2C'?'on':''}" onclick="setRF('seg','B2C')">B2C</span>
+      <span class="chip cg ${st.seg==='B2B'?'on':''}" onclick="setRF('seg','B2B')">B2B</span>
+      <span class="chip ca ${st.seg==='B2G'?'on':''}" onclick="setRF('seg','B2G')">B2G</span>
+    </div></div>
+    <div class="fg"><div class="fl">Year</div><div class="chips">
+      <span class="chip ${st.yr==='all'?'on':''}" onclick="setRF('yr','all')">All</span>
+      ${years.map(y=>`<span class="chip ${st.yr===y?'on':''}" onclick="setRF('yr','${y}')">${y}</span>`).join('')}
+    </div></div>
+    <div class="fg"><div class="fl">Quarter</div><div class="chips">
+      <span class="chip ${st.q==='all'?'on':''}" onclick="setRF('q','all')">All Q</span>
+      ${quarters.map(q=>`<span class="chip ${st.q===q?'on':''}" onclick="setRF('q','${q}')">${q}</span>`).join('')}
+    </div></div>
+    <div class="fg" style="flex:1;min-width:0"><div class="fl">Product / Project</div><div class="chips">
+      ${allP.map(p=>`<span class="chip ${st.projs.has(p.name)?'on':''}" onclick="setRF('proj','${p.name.replace(/'/g,"\\'")}')">${p.name}</span>`).join('')}
+    </div></div>
     <div style="align-self:flex-end"><button class="rbtn" onclick="resetRF()">↺ Reset</button></div>
   </div>
+
   <div class="g4">
     <div class="kpi" style="--c:#5b21b6"><div class="kl">Total Revenue</div><div class="kv" style="color:#5b21b6">${fmtK(tot26)}</div><div class="ks">SAR · 2026 YTD</div></div>
-    ${['B2C','B2B','B2G'].map(s=>`<div class="kpi" style="--c:${SC[s]}"><div class="kl">${s}</div><div class="kv" style="color:${SC[s]}">${fmtK(yt[s])}</div><div class="ks">${tot26>0?(yt[s]/tot26*100).toFixed(1)+'%':'-'} of Total · 2026 YTD</div></div>`).join('')}
+    ${['B2C','B2B','B2G'].map(s=>`<div class="kpi" style="--c:${SC[s]}"><div class="kl">${s}</div><div class="kv" style="color:${SC[s]}">${fmtK(ytd26[s])}</div><div class="ks">${tot26>0?(ytd26[s]/tot26*100).toFixed(1)+'%':'-'} · 2026 YTD</div></div>`).join('')}
   </div>
+
   <div class="g2">
-    <div class="cc"><div class="ct">Monthly Revenue <span class="cs">2026 by Segment</span></div><div style="height:220px"><canvas id="c-rm"></canvas></div></div>
+    <div class="cc"><div class="ct">Monthly Revenue <span class="cs">2026</span></div><div style="height:220px"><canvas id="c-rm"></canvas></div></div>
     <div class="cc"><div class="ct">Annual by Segment <span class="cs">All years</span></div><div style="height:220px"><canvas id="c-ra"></canvas></div></div>
   </div>
   <div class="cc"><div class="ct">Top 10 Products / Projects <span class="cs">2026 YTD</span></div><div style="height:200px"><canvas id="c-rt"></canvas></div></div>
+
   ${['B2C','B2B','B2G'].filter(s=>fp[s].length>0).map(s=>`
   <div class="cc">
-    <div class="ct"><span><span style="width:9px;height:9px;border-radius:50%;background:${SC[s]};display:inline-block;margin-right:6px"></span>${s}</span><span class="cs">${fp[s].length} items · ${st.yr==='all'?'All years':st.yr}</span></div>
+    <div class="ct"><span><span style="width:9px;height:9px;border-radius:50%;background:${SC[s]};display:inline-block;margin-right:6px"></span>${s}</span>
+    <span class="cs">${fp[s].length} items · ${st.yr==='all'?'All years':(st.q==='all'?st.yr:st.q+' '+st.yr)}</span></div>
     <div class="tw"><table><thead><tr><th>Stream</th>${dispL.map(m=>`<th>${m}</th>`).join('')}<th>Total</th></tr></thead><tbody>
-    ${fp[s].map(p=>{const rt=dispIdx.reduce((t,i)=>t+(p.vals[i]||0),0);return`<tr><td>${p.name}</td>${dispIdx.map(i=>{const v=p.vals[i]||0;return`<td class="${v>0?'pos':''}">${v>0?fmtK(v):'—'}</td>`;}).join('')}<td class="pos" style="font-weight:700">${fmtK(rt)}</td></tr>`;}).join('')}
-    <tr class="tot"><td>Total ${s}</td>${dispIdx.map(i=>{const t=fp[s].reduce((s,p)=>s+(p.vals[i]||0),0);return`<td style="color:${SC[s]}">${fmtK(t)}</td>`;}).join('')}<td style="color:${SC[s]}">${fmtK(fp[s].reduce((t,p)=>t+dispIdx.reduce((s,i)=>s+(p.vals[i]||0),0),0))}</td></tr>
+    ${fp[s].map(p=>{const rt=sumIdx([p],dispIdx);return`<tr><td>${p.name}</td>${dispIdx.map(i=>{const v=p.vals[i]||0;return`<td class="${v>0?'pos':''}">${v>0?fmtK(v):'—'}</td>`;}).join('')}<td class="pos" style="font-weight:700">${fmtK(rt)}</td></tr>`;}).join('')}
+    <tr class="tot"><td>Total ${s}</td>${dispIdx.map(i=>{const t=fp[s].reduce((s,p)=>s+(p.vals[i]||0),0);return`<td style="color:${SC[s]}">${fmtK(t)}</td>`;}).join('')}<td style="color:${SC[s]}">${fmtK(sumIdx(fp[s],dispIdx))}</td></tr>
     </tbody></table></div>
   </div>`).join('')}
-  <div class="cc"><div class="ct">All Streams <span class="cs">${[...fp.B2C,...fp.B2B,...fp.B2G].length} · ${st.yr==='all'?'All years':st.yr}</span></div>
-  <div class="tw"><table><thead><tr><th>Segment</th><th>Product / Project</th>${dispL.map(m=>`<th>${m}</th>`).join('')}<th>Total</th></tr></thead><tbody>
-  ${[...fp.B2C,...fp.B2B,...fp.B2G].sort((a,b)=>ytd26([b])-ytd26([a])).map(p=>{const rt=dispIdx.reduce((t,i)=>t+(p.vals[i]||0),0);return`<tr><td><span class="bdg ${p.seg.toLowerCase()}d">${p.seg}</span></td><td>${p.name}</td>${dispIdx.map(i=>{const v=p.vals[i]||0;return`<td class="${v>0?'pos':''}">${v>0?fmtK(v):'—'}</td>`;}).join('')}<td class="pos" style="font-weight:700">${fmtK(rt)}</td></tr>`;}).join('')}
+
+  <div class="cc"><div class="ct">All Streams <span class="cs">${[...fp.B2C,...fp.B2B,...fp.B2G].length} streams</span></div>
+  <div class="tw"><table><thead><tr><th>Segment</th><th>Product</th>${dispL.map(m=>`<th>${m}</th>`).join('')}<th>Total</th></tr></thead><tbody>
+  ${[...fp.B2C,...fp.B2B,...fp.B2G].sort((a,b)=>sumIdx([b],ix26)-sumIdx([a],ix26)).map(p=>{
+    const rt=sumIdx([p],dispIdx);
+    return`<tr><td><span class="bdg ${p.seg.toLowerCase()}d">${p.seg}</span></td><td>${p.name}</td>${dispIdx.map(i=>{const v=p.vals[i]||0;return`<td class="${v>0?'pos':''}">${v>0?fmtK(v):'—'}</td>`;}).join('')}<td class="pos" style="font-weight:700">${fmtK(rt)}</td></tr>`;
+  }).join('')}
   </tbody></table></div></div>`;
 
-  dc('rm');
-  CH['rm'] = new Chart(document.getElementById('c-rm').getContext('2d'), {
-    type:'bar', data:{labels:l26, datasets:['B2C','B2B','B2G'].map((s,i)=>({label:s, data:l26.map((_,mi)=>fp[s].reduce((t,p)=>t+(p.vals[ix26[mi]]||0),0)), backgroundColor:['rgba(59,130,246,.7)','rgba(16,185,129,.7)','rgba(245,158,11,.7)'][i], borderRadius:4}))},
-    options:{...copts(), scales:{x:{ticks:{color:C.tc,font:{size:10},maxRotation:45},grid:{color:C.gr},stacked:true}, y:{ticks:{color:C.tc,callback:v=>fmtK(v)},grid:{color:C.gr},stacked:true}}}
+  dc('rm');CH['rm']=new Chart(document.getElementById('c-rm').getContext('2d'),{
+    type:'bar',data:{labels:l26,datasets:['B2C','B2B','B2G'].map((s,i)=>({label:s,data:l26.map((_,mi)=>fp[s].reduce((t,p)=>t+(p.vals[ix26[mi]]||0),0)),backgroundColor:['rgba(59,130,246,.7)','rgba(16,185,129,.7)','rgba(245,158,11,.7)'][i],borderRadius:4}))},
+    options:copts(true)
   });
-  
-  dc('ra');
-  CH['ra'] = new Chart(document.getElementById('c-ra').getContext('2d'), {
-    type:'bar', data:{labels:years, datasets:['B2C','B2B','B2G'].map((s,i)=>({label:s, data:years.map(yr=>sumYr(fp[s],yr)), backgroundColor:['rgba(59,130,246,.7)','rgba(16,185,129,.7)','rgba(245,158,11,.7)'][i], borderRadius:4}))},
+  dc('ra');CH['ra']=new Chart(document.getElementById('c-ra').getContext('2d'),{
+    type:'bar',data:{labels:years,datasets:['B2C','B2B','B2G'].map((s,i)=>({label:s,data:years.map(yr=>sumYr(fp[s],yr)),backgroundColor:['rgba(59,130,246,.7)','rgba(16,185,129,.7)','rgba(245,158,11,.7)'][i],borderRadius:4}))},
     options:copts()
   });
-  
-  const top10 = [...fp.B2C,...fp.B2B,...fp.B2G].sort((a,b)=>ytd26([b])-ytd26([a])).slice(0,10);
-  dc('rt');
-  CH['rt'] = new Chart(document.getElementById('c-rt').getContext('2d'), {
-    type:'bar', data:{labels:top10.map(p=>p.name), datasets:[{label:'2026 YTD', data:top10.map(p=>ytd26([p])), backgroundColor:top10.map(p=>({B2C:C.b2c,B2B:C.b2b,B2G:C.b2g})[p.seg]), borderRadius:4}]},
-    options:{indexAxis:'y', ...copts(), plugins:{legend:{display:false}}}
+  const top10=[...fp.B2C,...fp.B2B,...fp.B2G].sort((a,b)=>sumIdx([b],ix26)-sumIdx([a],ix26)).slice(0,10);
+  dc('rt');CH['rt']=new Chart(document.getElementById('c-rt').getContext('2d'),{
+    type:'bar',data:{labels:top10.map(p=>p.name),datasets:[{label:'2026 YTD',data:top10.map(p=>sumIdx([p],ix26)),backgroundColor:top10.map(p=>({B2C:C.b2c,B2B:C.b2b,B2G:C.b2g})[p.seg]),borderRadius:4}]},
+    options:{indexAxis:'y',...copts(),plugins:{legend:{display:false}}}
   });
 }
 
-function setRF(t,v){const s=window._RS;if(t==='seg')s.seg=v;else if(t==='yr')s.yr=v;else{if(s.projs.has(v))s.projs.delete(v);else s.projs.add(v);}['rm','ra','rt'].forEach(dc);renderRevenue();}
-function resetRF(){window._RS={seg:'all',yr:'all',projs:new Set()};['rm','ra','rt'].forEach(dc);renderRevenue();}
+function setRF(t,v){const s=window._RS;if(t==='seg')s.seg=v;else if(t==='yr'){s.yr=v;if(v==='all')s.q='all';}else if(t==='q')s.q=v;else{if(s.projs.has(v))s.projs.delete(v);else s.projs.add(v);}['rm','ra','rt'].forEach(dc);renderRevenue();}
+function resetRF(){window._RS={seg:'all',yr:'all',q:'all',projs:new Set()};['rm','ra','rt'].forEach(dc);renderRevenue();}
 
 // ============================================================
-// P3: P&L — robust parsing, all years, filters
-// P&L CSV: row[0]=["","Items (SAR)","2019-03-01",...], values at col 2+
+// P2C: REVENUE COMPARISON
 // ============================================================
-window._PL = null;
-window._plV = 'monthly';
+async function loadRevCompare(){
+  try{
+    await loadRSAData();
+    const{years,quarters}=window._RD;
+    document.getElementById('p2cc').innerHTML=`
+    <div class="fb" style="margin-bottom:16px">
+      <div class="fg"><div class="fl">Period A — Year</div>
+        <select id="cmp-ay" onchange="renderRevCompare()"><option value="2025">2025</option>${years.map(y=>`<option value="${y}"${y==='2026'?' selected':''}>${y}</option>`).join('')}</select>
+      </div>
+      <div class="fg"><div class="fl">Period A — Quarter</div>
+        <select id="cmp-aq" onchange="renderRevCompare()"><option value="all">All Year</option>${quarters.map(q=>`<option>${q}</option>`).join('')}</select>
+      </div>
+      <div style="display:flex;align-items:center;font-size:1.5rem;color:var(--mu);align-self:flex-end;padding-bottom:4px">vs</div>
+      <div class="fg"><div class="fl">Period B — Year</div>
+        <select id="cmp-by" onchange="renderRevCompare()"><option value="2024">2024</option>${years.map(y=>`<option value="${y}"${y==='2025'?' selected':''}>${y}</option>`).join('')}</select>
+      </div>
+      <div class="fg"><div class="fl">Period B — Quarter</div>
+        <select id="cmp-bq" onchange="renderRevCompare()"><option value="all">All Year</option>${quarters.map(q=>`<option>${q}</option>`).join('')}</select>
+      </div>
+    </div>
+    <div id="cmp-rev-content"><div class="ld"><span class="spin"></span>Select periods above...</div></div>`;
+    renderRevCompare();
+  }catch(e){errEl('p2cc','Error: '+e.message);}
+}
 
-async function loadPL() {
-  try {
-    const raw = await gcsv('P&L');
-    if(!raw || raw.length<2) { errEl('p3c','P&L sheet empty'); return; }
-    
-    // Parse date columns from row 0, starting at col 2
-    const hdr = raw[0];
-    const dC = [];
-    for(let i=2; i<hdr.length; i++) {
-      const d = parseD(hdr[i]);
-      if(d) dC.push({label:d, i});
-    }
-    
-    if(dC.length===0) { errEl('p3c','No date columns in P&L. Check: '+hdr.slice(0,5).join('|')); return; }
-    
-    const years = [...new Set(dC.map(c=>c.label.split(' ')[1]).filter(Boolean))].sort();
-    
-    const gR = key => raw.find(r=>r&&r[0]&&String(r[0]).replace(/^"|"$/g,'').trim()===key);
-    const gV = row => row ? dC.map(c=>pn(row[c.i])) : dC.map(()=>0);
-    
-    const rows = [
-      {label:'Revenue',             vals:gV(gR('income')),             cls:'pl-rv'},
-      {label:'Cost of Revenue',     vals:gV(gR('expense_direct_cost')), cls:''},
-      {label:'Gross Profit',        vals:gV(gR('Discount')),            cls:'pl-gp'},
-      {label:'Salaries & Benefits', vals:gV(gR('Employees')),           cls:''},
-      {label:'Marketing',           vals:gV(gR('Marketing')),           cls:''},
-      {label:'Other OPEX',          vals:gV(gR('Others')),              cls:''},
-      {label:'EBITDA',              vals:gV(raw[10]),                   cls:'pl-eb'},
-      {label:'Other Income',        vals:gV(gR('income_other')),        cls:''},
-      {label:'Net Profit / Loss',   vals:gV(raw[raw.length-1]),         cls:'pl-np'},
-    ];
-    
-    const ix26 = dC.map((c,i)=>c.label.includes('2026')?i:-1).filter(i=>i>=0);
-    const l26 = ix26.map(i=>dC[i].label);
-    const ytd = r => ix26.reduce((t,i)=>t+(r.vals[i]||0),0);
-    const kR=ytd(rows[0]), kC=ytd(rows[1]), kG=ytd(rows[2]), kO=ytd(rows[3])+ytd(rows[4])+ytd(rows[5]), kN=ytd(rows[8]);
-    const gm=kR?(kG/kR*100):0, nm=kR?(kN/kR*100):0;
-    
-    window._PL = {dC, rows, years};
-    
-    document.getElementById('p3c').innerHTML = `
+function renderRevCompare(){
+  const{dC,B2C,B2B,B2G}=window._RD;
+  const ay=document.getElementById('cmp-ay')?.value||'2026';
+  const aq=document.getElementById('cmp-aq')?.value||'all';
+  const by=document.getElementById('cmp-by')?.value||'2025';
+  const bq=document.getElementById('cmp-bq')?.value||'all';
+
+  const aidx=getRevIdx(dC,ay,aq);
+  const bidx=getRevIdx(dC,by,bq);
+
+  const allP=[...B2C,...B2B,...B2G];
+  const SC={B2C:C.b2c,B2B:C.b2b,B2G:C.b2g};
+  const sumI=(prods,idxs)=>prods.reduce((t,p)=>t+idxs.reduce((s,i)=>s+(p.vals[i]||0),0),0);
+
+  const aTotal={B2C:sumI(B2C,aidx),B2B:sumI(B2B,aidx),B2G:sumI(B2G,aidx)};
+  const bTotal={B2C:sumI(B2C,bidx),B2B:sumI(B2B,bidx),B2G:sumI(B2G,bidx)};
+  const aGrand=aTotal.B2C+aTotal.B2B+aTotal.B2G;
+  const bGrand=bTotal.B2C+bTotal.B2B+bTotal.B2G;
+  const delta=aGrand-bGrand;
+  const deltaPct=bGrand?((delta/bGrand)*100):0;
+
+  const pA=aq==='all'?ay:aq+' '+ay;
+  const pB=bq==='all'?by:bq+' '+by;
+
+  let html=`
+  <div class="g3" style="margin-bottom:16px">
+    <div class="kpi" style="--c:#5b21b6">
+      <div class="kl">${pA}</div>
+      <div class="kv" style="color:#5b21b6">${fmtK(aGrand)}</div>
+      <div class="ks">SAR Total Revenue</div>
+    </div>
+    <div class="kpi" style="--c:#94a3b8">
+      <div class="kl">${pB}</div>
+      <div class="kv" style="color:#94a3b8">${fmtK(bGrand)}</div>
+      <div class="ks">SAR Total Revenue</div>
+    </div>
+    <div class="kpi" style="--c:${delta>=0?'#10b981':'#ef4444'}">
+      <div class="kl">Change</div>
+      <div class="kv" style="color:${delta>=0?C.gn:C.rd}">${delta>=0?'+':''}${fmtK(delta)}</div>
+      <div class="ks">${deltaPct>=0?'+':''}${deltaPct.toFixed(1)}% vs ${pB}</div>
+    </div>
+  </div>
+
+  <div class="g2e" style="margin-bottom:16px">
+    <div class="cc"><div class="ct">Revenue Comparison by Segment <span class="cs">${pA} vs ${pB}</span></div><div style="height:220px"><canvas id="c-crev"></canvas></div></div>
+    <div class="cc"><div class="ct">Segment Breakdown <span class="cs">${pA}</span></div><div style="height:220px"><canvas id="c-crevd"></canvas></div></div>
+  </div>
+
+  <div class="tw"><table>
+    <thead><tr><th>Stream</th><th>${pA}</th><th>${pB}</th><th>Change</th><th>%</th></tr></thead>
+    <tbody>
+    ${['B2C','B2B','B2G'].map(s=>{
+      const ap=sumI({B2C,B2B,B2G}[s],aidx);const bp=sumI({B2C,B2B,B2G}[s],bidx);
+      const d=ap-bp;const dp=bp?(d/bp*100):0;
+      return`<tr class="tot"><td><span class="bdg ${s.toLowerCase()}d">${s} Total</span></td><td class="pos">${fmt(ap)}</td><td>${fmt(bp)}</td><td class="${d>=0?'pos':'neg'}">${d>=0?'+':''}${fmt(d)}</td><td class="${d>=0?'pos':'neg'}">${d>=0?'+':''}${dp.toFixed(1)}%</td></tr>
+      ${[...B2C,...B2B,...B2G].filter(p=>p.seg===s).map(p=>{
+        const av=sumI([p],aidx),bv=sumI([p],bidx);const dv=av-bv;const dvp=bv?(dv/bv*100):0;
+        return`<tr><td style="padding-left:16px">${p.name}</td><td class="${av>0?'pos':''}">${fmt(av)}</td><td>${fmt(bv)}</td><td class="${dv>=0?'pos':'neg'}">${dv>=0?'+':''}${fmt(dv)}</td><td class="${dv>=0?'pos':'neg'}">${dv>=0?'+':''}${dvp.toFixed(1)}%</td></tr>`;
+      }).join('')}`;
+    }).join('')}
+    <tr class="tot"><td>Grand Total</td><td class="pos">${fmt(aGrand)}</td><td>${fmt(bGrand)}</td><td class="${delta>=0?'pos':'neg'}">${delta>=0?'+':''}${fmt(delta)}</td><td class="${delta>=0?'pos':'neg'}">${delta>=0?'+':''}${deltaPct.toFixed(1)}%</td></tr>
+    </tbody>
+  </table></div>`;
+
+  document.getElementById('cmp-rev-content').innerHTML=html;
+
+  dc('crev');CH['crev']=new Chart(document.getElementById('c-crev').getContext('2d'),{
+    type:'bar',data:{labels:['B2C','B2B','B2G'],datasets:[
+      {label:pA,data:['B2C','B2B','B2G'].map(s=>sumI({B2C,B2B,B2G}[s],aidx)),backgroundColor:'rgba(91,33,182,.7)',borderRadius:4},
+      {label:pB,data:['B2C','B2B','B2G'].map(s=>sumI({B2C,B2B,B2G}[s],bidx)),backgroundColor:'rgba(148,163,184,.5)',borderRadius:4},
+    ]},options:copts()
+  });
+  dc('crevd');CH['crevd']=new Chart(document.getElementById('c-crevd').getContext('2d'),{
+    type:'doughnut',data:{labels:['B2C','B2B','B2G'],datasets:[{data:['B2C','B2B','B2G'].map(s=>sumI({B2C,B2B,B2G}[s],aidx)),backgroundColor:[C.b2c,C.b2b,C.b2g],borderWidth:0}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{position:'bottom',labels:{color:C.tc,font:{size:11},padding:8}}}}
+  });
+}
+
+// ============================================================
+// LOAD P&L DATA (shared)
+// ============================================================
+async function loadPLData(){
+  if(window._PLD)return window._PLD;
+  const raw=await gcsv('P%26L');
+  if(!raw||raw.length<2)throw new Error('P&L sheet empty');
+  const hdr=raw[0];
+  const dC=[];
+  for(let i=2;i<hdr.length;i++){const d=parseD(hdr[i]);if(d)dC.push({label:d,i});}
+  if(dC.length===0)throw new Error('No date columns in P&L');
+  const years=[...new Set(dC.map(c=>c.label.split(' ')[1]).filter(Boolean))].sort();
+  const gR=key=>raw.find(r=>r&&r[0]&&String(r[0]).replace(/^"|"$/g,'').trim()===key);
+  const gV=row=>row?dC.map(c=>pn(row[c.i])):dC.map(()=>0);
+  const rows=[
+    {label:'Revenue',vals:gV(gR('income')),cls:'pl-rv'},
+    {label:'Cost of Revenue',vals:gV(gR('expense_direct_cost')),cls:''},
+    {label:'Gross Profit',vals:gV(gR('Discount')),cls:'pl-gp'},
+    {label:'Salaries & Benefits',vals:gV(gR('Employees')),cls:''},
+    {label:'Marketing',vals:gV(gR('Marketing')),cls:''},
+    {label:'Other OPEX',vals:gV(gR('Others')),cls:''},
+    {label:'EBITDA',vals:gV(raw[10]),cls:'pl-eb'},
+    {label:'Other Income',vals:gV(gR('income_other')),cls:''},
+    {label:'Net Profit / Loss',vals:gV(raw[raw.length-1]),cls:'pl-np'},
+  ];
+  window._PLD={dC,rows,years,raw};
+  return window._PLD;
+}
+
+// ============================================================
+// P3: P&L — all years, monthly/quarterly/annual, year filter
+// ============================================================
+window._plV='monthly';
+async function loadPL(){
+  try{
+    const{dC,rows,years}=await loadPLData();
+    const ix26=get26Idx(dC);
+    const l26=ix26.map(i=>dC[i].label);
+    const ytd=r=>ix26.reduce((t,i)=>t+(r.vals[i]||0),0);
+    const kR=ytd(rows[0]),kC=ytd(rows[1]),kG=ytd(rows[2]),kO=ytd(rows[3])+ytd(rows[4])+ytd(rows[5]),kN=ytd(rows[8]);
+    const gm=kR?(kG/kR*100):0,nm=kR?(kN/kR*100):0;
+
+    document.getElementById('p3c').innerHTML=`
     <div class="g5">
-      <div class="kpi" style="--c:#5b21b6"><div class="kl">Revenue</div><div class="kv" style="font-size:1.1rem">${fmtK(kR)} SAR</div><div class="ks">2026 YTD</div></div>
-      <div class="kpi" style="--c:#ef4444"><div class="kl">COGS</div><div class="kv" style="font-size:1.1rem;color:#ef4444">${fmtK(kC)} SAR</div><div class="ks">${kR?(kC/kR*100).toFixed(1):0}% of Revenue</div></div>
-      <div class="kpi" style="--c:${gm>=0?'#10b981':'#ef4444'}"><div class="kl">Gross Profit</div><div class="kv" style="font-size:1.1rem;color:${gm>=0?C.gn:C.rd}">${fmtK(kG)} SAR</div><div class="ks">${gm.toFixed(1)}% Gross Margin</div></div>
-      <div class="kpi" style="--c:#f59e0b"><div class="kl">OPEX</div><div class="kv" style="font-size:1.1rem;color:#f59e0b">${fmtK(kO)} SAR</div><div class="ks">${kR?(kO/kR*100).toFixed(1):0}% of Revenue</div></div>
-      <div class="kpi" style="--c:${nm>=0?'#10b981':'#ef4444'}"><div class="kl">Net Profit / Loss</div><div class="kv" style="font-size:1.1rem;color:${nm>=0?C.gn:C.rd}">${fmtK(kN)} SAR</div><div class="ks">${nm.toFixed(1)}% Net Margin</div></div>
+      <div class="kpi" style="--c:#5b21b6"><div class="kl">Revenue</div><div class="kv" style="font-size:1rem">${fmtK(kR)} SAR</div><div class="ks">2026 YTD</div></div>
+      <div class="kpi" style="--c:#ef4444"><div class="kl">COGS</div><div class="kv" style="font-size:1rem;color:#ef4444">${fmtK(kC)} SAR</div><div class="ks">${kR?(kC/kR*100).toFixed(1):0}% of Revenue</div></div>
+      <div class="kpi" style="--c:${gm>=0?'#10b981':'#ef4444'}"><div class="kl">Gross Profit</div><div class="kv" style="font-size:1rem;color:${gm>=0?C.gn:C.rd}">${fmtK(kG)} SAR</div><div class="ks">${gm.toFixed(1)}% Gross Margin</div></div>
+      <div class="kpi" style="--c:#f59e0b"><div class="kl">OPEX</div><div class="kv" style="font-size:1rem;color:#f59e0b">${fmtK(kO)} SAR</div><div class="ks">${kR?(kO/kR*100).toFixed(1):0}% of Revenue</div></div>
+      <div class="kpi" style="--c:${nm>=0?'#10b981':'#ef4444'}"><div class="kl">Net Profit / Loss</div><div class="kv" style="font-size:1rem;color:${nm>=0?C.gn:C.rd}">${fmtK(kN)} SAR</div><div class="ks">${nm.toFixed(1)}% Net Margin</div></div>
     </div>
     <div class="g2">
       <div class="cc"><div class="ct">Revenue vs COGS vs Gross Profit <span class="cs">2026</span></div><div style="height:200px"><canvas id="c-pl1"></canvas></div></div>
@@ -571,13 +600,11 @@ async function loadPL() {
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
       <div style="font-size:.8rem;font-weight:700;color:var(--tx)">P&L Statement</div>
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-        <span style="font-size:.69rem;color:var(--mu);font-weight:700">VIEW</span>
         <div class="chips">
           <span class="chip on" id="pv-m" onclick="setPLV('monthly')">Monthly</span>
           <span class="chip" id="pv-q" onclick="setPLV('quarterly')">Quarterly</span>
           <span class="chip" id="pv-a" onclick="setPLV('annual')">Annual</span>
         </div>
-        <span style="font-size:.69rem;color:var(--mu);font-weight:700">YEAR</span>
         <select id="plY" onchange="renderPL()">
           <option value="all">All Years</option>
           ${years.map(y=>`<option value="${y}"${y==='2026'?' selected':''}>${y}</option>`).join('')}
@@ -585,88 +612,106 @@ async function loadPL() {
       </div>
     </div>
     <div class="tw" id="plTW"></div>`;
-    
-    dc('pl1'); CH['pl1'] = new Chart(document.getElementById('c-pl1').getContext('2d'),{type:'bar',data:{labels:l26,datasets:[
+
+    dc('pl1');CH['pl1']=new Chart(document.getElementById('c-pl1').getContext('2d'),{type:'bar',data:{labels:l26,datasets:[
       {label:'Revenue',data:ix26.map(i=>rows[0].vals[i]),backgroundColor:'rgba(91,33,182,.5)',borderRadius:4,order:2},
       {label:'COGS',data:ix26.map(i=>rows[1].vals[i]),backgroundColor:'rgba(239,68,68,.4)',borderRadius:4,order:2},
       {label:'Gross Profit',data:ix26.map(i=>rows[2].vals[i]),type:'line',borderColor:C.gn,borderWidth:2.5,pointRadius:3,tension:.3,fill:false,order:1},
     ]},options:copts()});
-    
-    dc('pl2'); CH['pl2'] = new Chart(document.getElementById('c-pl2').getContext('2d'),{type:'doughnut',data:{labels:['Gross Profit','COGS','OPEX'],datasets:[{data:[Math.max(0,kG),Math.abs(kC),Math.abs(kO)],backgroundColor:[C.gn,'#ef4444',C.am],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{position:'bottom',labels:{color:C.tc,font:{size:11},padding:8}}}}});
-    
-    dc('pl3'); CH['pl3'] = new Chart(document.getElementById('c-pl3').getContext('2d'),{type:'line',data:{labels:l26,datasets:[
+    dc('pl2');CH['pl2']=new Chart(document.getElementById('c-pl2').getContext('2d'),{type:'doughnut',data:{labels:['Gross Profit','COGS','OPEX'],datasets:[{data:[Math.max(0,kG),Math.abs(kC),Math.abs(kO)],backgroundColor:[C.gn,'#ef4444',C.am],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{position:'bottom',labels:{color:C.tc,font:{size:11},padding:8}}}}});
+    dc('pl3');CH['pl3']=new Chart(document.getElementById('c-pl3').getContext('2d'),{type:'line',data:{labels:l26,datasets:[
       {label:'Net Profit',data:ix26.map(i=>rows[8].vals[i]),borderColor:C.gn,backgroundColor:'rgba(16,185,129,.1)',borderWidth:2.5,pointRadius:3,tension:.3,fill:true},
       {label:'Gross Profit',data:ix26.map(i=>rows[2].vals[i]),borderColor:C.p2,borderDash:[4,4],borderWidth:2,pointRadius:2,tension:.3,fill:false},
     ]},options:copts()});
-    
-    const ov = {Salaries:ix26.reduce((s,i)=>s+(rows[3].vals[i]||0),0), Marketing:ix26.reduce((s,i)=>s+(rows[4].vals[i]||0),0), 'Other OPEX':ix26.reduce((s,i)=>s+(rows[5].vals[i]||0),0)};
-    dc('pl4'); CH['pl4'] = new Chart(document.getElementById('c-pl4').getContext('2d'),{type:'doughnut',data:{labels:Object.keys(ov),datasets:[{data:Object.values(ov).map(Math.abs),backgroundColor:[C.pu,C.bl,C.am],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{position:'bottom',labels:{color:C.tc,font:{size:11},padding:8}}}}});
-    
-    window._plV = 'monthly';
-    renderPL();
-  } catch(e) {
-    errEl('p3c', 'Error loading P&L: '+e.message);
-    console.error('PL error:', e);
-  }
+    const ov={Salaries:ix26.reduce((s,i)=>s+(rows[3].vals[i]||0),0),Marketing:ix26.reduce((s,i)=>s+(rows[4].vals[i]||0),0),'Other':ix26.reduce((s,i)=>s+(rows[5].vals[i]||0),0)};
+    dc('pl4');CH['pl4']=new Chart(document.getElementById('c-pl4').getContext('2d'),{type:'doughnut',data:{labels:Object.keys(ov),datasets:[{data:Object.values(ov).map(Math.abs),backgroundColor:[C.pu,C.bl,C.am],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{position:'bottom',labels:{color:C.tc,font:{size:11},padding:8}}}}});
+    window._plV='monthly';renderPL();
+  }catch(e){errEl('p3c','Error loading P&L: '+e.message);console.error(e);}
 }
 
-function setPLV(v) {
-  window._plV = v;
-  ['m','q','a'].forEach(x => document.getElementById('pv-'+x)?.classList.remove('on'));
-  document.getElementById({monthly:'m',quarterly:'q',annual:'a'}[v])?.classList.add('on');
-  renderPL();
+function setPLV(v){window._plV=v;['m','q','a'].forEach(x=>document.getElementById('pv-'+x)?.classList.remove('on'));document.getElementById({monthly:'m',quarterly:'q',annual:'a'}[v])?.classList.add('on');renderPL();}
+
+function renderPL(){
+  if(!window._PLD)return;
+  const{dC,rows}=window._PLD;
+  const yr=document.getElementById('plY')?.value||'all';
+  const v=window._plV||'monthly';
+  const baseIdx=yr==='all'?dC.map((_,i)=>i):dC.map((c,i)=>c.label.includes(yr)?i:-1).filter(i=>i>=0);
+  let groups=[];
+  if(v==='monthly'){groups=baseIdx.map(i=>({label:dC[i].label,idxs:[i]}));}
+  else if(v==='quarterly'){const qm={};baseIdx.forEach(i=>{const[mon,yr2]=dC[i].label.split(' ');const q=`Q${Math.ceil((MN.indexOf(mon)+1)/3)} ${yr2}`;if(!qm[q])qm[q]=[];qm[q].push(i);});groups=Object.entries(qm).map(([label,idxs])=>({label,idxs}));}
+  else{const ym={};baseIdx.forEach(i=>{const y=dC[i].label.split(' ')[1]||'';if(!ym[y])ym[y]=[];ym[y].push(i);});groups=Object.entries(ym).map(([label,idxs])=>({label,idxs}));}
+  let h=`<table><thead><tr><th>Line Item</th>${groups.map(g=>`<th>${g.label}</th>`).join('')}</tr></thead><tbody>`;
+  rows.forEach(r=>{h+=`<tr class="${r.cls}"><td>${r.label}</td>`;groups.forEach(g=>{const vv=g.idxs.reduce((t,i)=>t+(r.vals[i]||0),0);h+=`<td class="${vv>0?'pos':vv<0?'neg':''}">${fmt(vv)}</td>`;});h+='</tr>';});
+  document.getElementById('plTW').innerHTML=h+'</tbody></table>';
 }
 
-function renderPL() {
-  if(!window._PL) return;
-  const {dC, rows, years} = window._PL;
-  const yr = document.getElementById('plY')?.value || 'all';
-  const v = window._plV || 'monthly';
-  const baseIdx = yr==='all' ? dC.map((_,i)=>i) : dC.map((c,i)=>c.label.includes(yr)?i:-1).filter(i=>i>=0);
-  let groups = [];
-  if(v==='monthly') {
-    groups = baseIdx.map(i=>({label:dC[i].label, idxs:[i]}));
-  } else if(v==='quarterly') {
-    const qm = {};
-    baseIdx.forEach(i=>{
-      const [mon,yr2] = dC[i].label.split(' ');
-      const q = `Q${Math.ceil((MN.indexOf(mon)+1)/3)} ${yr2}`;
-      if(!qm[q]) qm[q]=[];
-      qm[q].push(i);
-    });
-    groups = Object.entries(qm).map(([label,idxs])=>({label,idxs}));
-  } else {
-    const ym = {};
-    baseIdx.forEach(i=>{const y=dC[i].label.split(' ')[1]||'';if(!ym[y])ym[y]=[];ym[y].push(i);});
-    groups = Object.entries(ym).map(([label,idxs])=>({label,idxs}));
-  }
-  let h = `<table><thead><tr><th>Line Item</th>${groups.map(g=>`<th>${g.label}</th>`).join('')}</tr></thead><tbody>`;
+// ============================================================
+// P3C: P&L COMPARISON
+// ============================================================
+async function loadPLCompare(){
+  try{
+    const{years}=await loadPLData();
+    document.getElementById('p3cc').innerHTML=`
+    <div class="fb" style="margin-bottom:16px">
+      <div class="fg"><div class="fl">Period A — Year</div>
+        <select id="cpl-ay" onchange="renderPLCompare()">${years.map(y=>`<option value="${y}"${y==='2026'?' selected':''}>${y}</option>`).join('')}</select>
+      </div>
+      <div style="display:flex;align-items:center;font-size:1.5rem;color:var(--mu);align-self:flex-end;padding-bottom:4px">vs</div>
+      <div class="fg"><div class="fl">Period B — Year</div>
+        <select id="cpl-by" onchange="renderPLCompare()">${years.map(y=>`<option value="${y}"${y==='2025'?' selected':''}>${y}</option>`).join('')}</select>
+      </div>
+    </div>
+    <div id="cpl-content"><div class="ld"><span class="spin"></span>Loading...</div></div>`;
+    renderPLCompare();
+  }catch(e){errEl('p3cc','Error: '+e.message);}
+}
+
+function renderPLCompare(){
+  if(!window._PLD)return;
+  const{dC,rows}=window._PLD;
+  const ay=document.getElementById('cpl-ay')?.value||'2026';
+  const by=document.getElementById('cpl-by')?.value||'2025';
+  const aidx=getYrIdx(dC,ay);
+  const bidx=getYrIdx(dC,by);
+  const sumI=(vals,idxs)=>idxs.reduce((t,i)=>t+(vals[i]||0),0);
+
+  let html=`
+  <div class="tw"><table>
+    <thead><tr><th>Line Item</th><th>${ay}</th><th>${by}</th><th>Change</th><th>%</th></tr></thead>
+    <tbody>`;
   rows.forEach(r=>{
-    h += `<tr class="${r.cls}"><td>${r.label}</td>`;
-    groups.forEach(g=>{const vv=g.idxs.reduce((t,i)=>t+(r.vals[i]||0),0);h+=`<td class="${vv>0?'pos':vv<0?'neg':''}">${fmt(vv)}</td>`;});
-    h += '</tr>';
+    const av=sumI(r.vals,aidx),bv=sumI(r.vals,bidx);
+    const d=av-bv,dp=bv?(d/bv*100):0;
+    html+=`<tr class="${r.cls}"><td>${r.label}</td><td class="${av>0?'pos':av<0?'neg':''}">${fmt(av)}</td><td>${fmt(bv)}</td><td class="${d>=0?'pos':'neg'}">${d>=0?'+':''}${fmt(d)}</td><td class="${d>=0?'pos':'neg'}">${d>=0?'+':''}${dp.toFixed(1)}%</td></tr>`;
   });
-  document.getElementById('plTW').innerHTML = h + '</tbody></table>';
+  html+='</tbody></table></div>';
+
+  // Chart
+  html+=`<div class="cc"><div class="ct">P&L Comparison <span class="cs">${ay} vs ${by}</span></div><div style="height:280px"><canvas id="c-cpl"></canvas></div></div>`;
+  document.getElementById('cpl-content').innerHTML=html;
+
+  const labels=rows.map(r=>r.label);
+  dc('cpl');CH['cpl']=new Chart(document.getElementById('c-cpl').getContext('2d'),{
+    type:'bar',data:{labels,datasets:[
+      {label:ay,data:rows.map(r=>sumI(r.vals,aidx)),backgroundColor:'rgba(91,33,182,.7)',borderRadius:4},
+      {label:by,data:rows.map(r=>sumI(r.vals,bidx)),backgroundColor:'rgba(148,163,184,.4)',borderRadius:4},
+    ]},options:copts()
+  });
 }
 
 // ============================================================
 // P4: REV VS TARGET
 // ============================================================
-async function loadRevTarget() {
-  try {
-    const raw = await gcsv('Rev YTD Vs Target 2026');
-    const streams = raw.slice(1).map(r=>({
-      name: String(r[0]||'').replace(/^"|"$/g,'').trim(),
-      target: pn(r[1]),
-      actual: pn(r[2]),
-      pct: pn(r[1])>0 ? (pn(r[2])/pn(r[1])*100) : 0
-    })).filter(r=>r.name && r.name!='null' && r.name!='Rev Stream');
-    
-    const grand = streams.find(s=>s.name==='2026 Target');
-    const totals = streams.filter(s=>['Total B2C','Total B2B','B2G'].includes(s.name));
-    const details = streams.filter(s=>!['Total B2C','Total B2B','B2G','2026 Target'].includes(s.name));
-    
-    document.getElementById('p4c').innerHTML = `
+async function loadRevTarget(){
+  try{
+    const raw=await gcsv('Rev YTD Vs Target 2026');
+    const streams=raw.slice(1).map(r=>({name:String(r[0]||'').replace(/^"|"$/g,'').trim(),target:pn(r[1]),actual:pn(r[2]),pct:pn(r[1])>0?(pn(r[2])/pn(r[1])*100):0})).filter(r=>r.name&&r.name!='null'&&r.name!='Rev Stream');
+    const grand=streams.find(s=>s.name==='2026 Target');
+    const totals=streams.filter(s=>['Total B2C','Total B2B','B2G'].includes(s.name));
+    const details=streams.filter(s=>!['Total B2C','Total B2B','B2G','2026 Target'].includes(s.name));
+
+    document.getElementById('p4c').innerHTML=`
     ${grand?`<div class="cc"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><span style="font-size:.88rem;font-weight:700">2026 — YTD vs Annual Target</span><span style="font-size:.78rem;font-family:'JetBrains Mono',monospace;color:var(--mu)"><strong>${fmtK(grand.actual)}</strong> YTD / ${fmtK(grand.target)} Target · <span style="color:${pcC(grand.pct)};font-weight:700">${grand.pct.toFixed(1)}%</span></span></div><div class="pb" style="height:14px"><div class="pf" style="width:${Math.min(100,grand.pct).toFixed(2)}%;background:linear-gradient(90deg,#5b21b6,#10b981)"></div></div></div>`:''}
     <div class="g3">${totals.map(s=>`<div class="kpi" style="--c:${pcC(s.pct)}"><div class="kl">${s.name}</div><div class="kv" style="color:${pcC(s.pct)}">${fmtK(s.actual)}</div><div class="ks">Target: ${fmtK(s.target)} · <strong>${s.pct.toFixed(1)}%</strong></div></div>`).join('')}</div>
     <div class="g2e">
@@ -676,44 +721,54 @@ async function loadRevTarget() {
     <div class="tw"><table><thead><tr><th>Stream</th><th>Annual Target</th><th>YTD Actual</th><th>%</th><th>Remaining</th></tr></thead><tbody>
     ${streams.map(s=>{const iT=['Total B2C','Total B2B','B2G','2026 Target'].includes(s.name);return`<tr ${iT?'class="tot"':''}><td>${s.name}</td><td>${fmt(s.target)}</td><td class="pos">${fmt(s.actual)}</td><td style="color:${pcC(s.pct)};font-weight:600">${s.pct.toFixed(1)}%</td><td class="${s.target-s.actual>0?'neg':''}">${fmt(s.target-s.actual)}</td></tr>`;}).join('')}
     </tbody></table></div>`;
-    
-    dc('r4'); CH['r4'] = new Chart(document.getElementById('c-r4').getContext('2d'),{
-      type:'bar', data:{labels:details.map(s=>s.name), datasets:[{label:'%', data:details.map(s=>+Math.min(s.pct,100).toFixed(1)), backgroundColor:details.map(s=>pcC(s.pct)), borderRadius:6}]},
-      options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:C.tc,callback:v=>v+'%'},grid:{color:C.gr},max:100},y:{ticks:{color:C.tc,font:{size:11}},grid:{display:false}}}}
-    });
-  } catch(e) { errEl('p4c','Error: '+e.message); }
+
+    dc('r4');CH['r4']=new Chart(document.getElementById('c-r4').getContext('2d'),{type:'bar',data:{labels:details.map(s=>s.name),datasets:[{label:'%',data:details.map(s=>+Math.min(s.pct,100).toFixed(1)),backgroundColor:details.map(s=>pcC(s.pct)),borderRadius:6}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:C.tc,callback:v=>v+'%'},grid:{color:C.gr},max:100},y:{ticks:{color:C.tc,font:{size:11}},grid:{display:false}}}}});
+  }catch(e){errEl('p4c','Error: '+e.message);}
 }
 
 // ============================================================
-// P5: BUDGET
+// P5: SPEND VS BUDGET — fixed Mar 206 header typo
 // ============================================================
-async function loadBudget() {
-  try {
-    const raw = await gcsv('Actual spend Vs Budget 2026');
-    const months = raw[0].slice(1).map(h=>String(h).replace(/^"|"$/g,'').trim()).filter(h=>h);
-    const allR = raw.slice(1).map(r=>({dept:String(r[0]||'').replace(/^"|"$/g,'').trim(), vals:months.map((_,i)=>pn(r[1+i]))})).filter(r=>r.dept);
-    let sp = allR.findIndex((r,i)=>i>3&&(r.dept==='Dept'||r.dept===''));
-    if(sp<0) sp=11;
+async function loadBudget(){
+  try{
+    const raw=await gcsv('Actual spend Vs Budget 2026');
+    // Fix header: normalize months (handles "Mar 206" typo → "Mar 2026")
+    const rawMonths=raw[0].slice(1).map(h=>String(h).replace(/^"|"$/g,'').trim());
+    const months=rawMonths.map(h=>{
+      // Fix common typo: "Mar 206" → "Mar 2026"
+      return h.replace(/^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+(\d{2,3})$/,(m,mon,yr)=>{
+        if(yr.length<4)return mon+' 20'+yr.slice(-2);
+        return m;
+      }).replace('206','2026');
+    });
+
+    const allR=raw.slice(1).map(r=>({dept:String(r[0]||'').replace(/^"|"$/g,'').trim(),vals:months.map((_,i)=>pn(r[1+i]))})).filter(r=>r.dept);
+    let sp=allR.findIndex((r,i)=>i>3&&(r.dept==='Dept'||r.dept===''));
+    if(sp<0)sp=11;
     const bR=allR.slice(0,sp).filter(r=>r.dept!=='Total');
     const aR=allR.slice(sp+1).filter(r=>r.dept!=='Total');
     const depts=bR.map(r=>r.dept);
-    const actIdx=months.map((m,i)=>aR.some(r=>r.vals[i]>0)?i:-1).filter(i=>i>=0);
 
-    document.getElementById('p5c').innerHTML = `
-    <div class="g2e">${actIdx.slice(0,2).map(mi=>`<div class="cc"><div class="ct">${months[mi]} · Budget vs Actual</div><div style="height:250px"><canvas id="c-b${mi}"></canvas></div></div>`).join('')}</div>
+    // Show all months that have EITHER budget OR actual data
+    const actIdx=months.map((m,i)=>aR.some(r=>r.vals[i]>0)||bR.some(r=>r.vals[i]>0)?i:-1).filter(i=>i>=0);
+
+    document.getElementById('p5c').innerHTML=`
+    <div class="g2e">${actIdx.slice(0,2).map(mi=>`<div class="cc"><div class="ct">${months[mi]} · Budget vs Actual</div><div style="height:250px"><canvas id="c-b${mi}"></canvas></div></div>`).join('')}
+    ${actIdx.length>2?`<div class="cc"><div class="ct">${months[actIdx[2]]} · Budget vs Actual</div><div style="height:250px"><canvas id="c-b${actIdx[2]}"></canvas></div></div>`:''}
+    </div>
     <div class="tw"><table><thead><tr><th>Department</th>${actIdx.map(mi=>`<th>${months[mi]} Budget</th><th>Actual</th><th>Variance</th>`).join('')}</tr></thead>
-    <tbody>${depts.map(d=>{const br=bR.find(r=>r.dept===d);const ar=aR.find(r=>r.dept===d);if(!br)return'';return`<tr><td>${d}</td>${actIdx.map(mi=>{const b=br.vals[mi]||0,a=ar?(ar.vals[mi]||0):0,v=b-a;return`<td>${fmt(b)}</td><td>${fmt(a)}</td><td class="${v>=0?'pos':'neg'}">${v>=0?'+':''}${fmt(v)}</td>`;}).join('')}</tr>`;}).join('')}</tbody>
-    <tfoot><tr class="tf tot"><td>Total</td>${actIdx.map(mi=>{const tb=bR.reduce((s,r)=>s+(r.vals[mi]||0),0),ta=aR.reduce((s,r)=>s+(r.vals[mi]||0),0),tv=tb-ta;return`<td>${fmt(tb)}</td><td>${fmt(ta)}</td><td class="${tv>=0?'pos':'neg'}">${tv>=0?'+':''}${fmt(tv)}</td>`;}).join('')}</tr></tfoot>
+    <tbody>${depts.map(d=>{const br=bR.find(r=>r.dept===d);const ar=aR.find(r=>r.dept===d);if(!br)return'';return`<tr><td>${d}</td>${actIdx.map(mi=>{const b=br.vals[mi]||0,a=ar?(ar.vals[mi]||0):0,v=b-a;return`<td>${fmt(b)}</td><td class="${a>0?'pos':''}">${fmt(a)}</td><td class="${v>=0?'pos':'neg'}">${v>=0?'+':''}${fmt(v)}</td>`;}).join('')}</tr>`;}).join('')}</tbody>
+    <tfoot><tr class="tf tot"><td>Total</td>${actIdx.map(mi=>{const tb=bR.reduce((s,r)=>s+(r.vals[mi]||0),0),ta=aR.reduce((s,r)=>s+(r.vals[mi]||0),0),tv=tb-ta;return`<td>${fmt(tb)}</td><td class="${ta>0?'pos':''}">${fmt(ta)}</td><td class="${tv>=0?'pos':'neg'}">${tv>=0?'+':''}${fmt(tv)}</td>`;}).join('')}</tr></tfoot>
     </table></div>`;
 
-    actIdx.slice(0,2).forEach(mi=>{
-      const bv=bR.map(r=>r.vals[mi]||0), av=aR.map(r=>r?(r.vals[mi]||0):0);
-      dc('b'+mi); CH['b'+mi] = new Chart(document.getElementById('c-b'+mi).getContext('2d'),{
-        type:'bar', data:{labels:depts, datasets:[{label:'Budget',data:bv,backgroundColor:'rgba(91,33,182,.5)',borderRadius:4},{label:'Actual',data:av,backgroundColor:av.map((a,i)=>a>bv[i]?'rgba(239,68,68,.7)':'rgba(16,185,129,.7)'),borderRadius:4}]},
+    actIdx.slice(0,3).forEach(mi=>{
+      const bv=bR.map(r=>r.vals[mi]||0),av=aR.map(r=>r?(r.vals[mi]||0):0);
+      dc('b'+mi);CH['b'+mi]=new Chart(document.getElementById('c-b'+mi).getContext('2d'),{
+        type:'bar',data:{labels:depts,datasets:[{label:'Budget',data:bv,backgroundColor:'rgba(91,33,182,.5)',borderRadius:4},{label:'Actual',data:av,backgroundColor:av.map((a,i)=>a>0?(a>bv[i]?'rgba(239,68,68,.7)':'rgba(16,185,129,.7)'):'rgba(148,163,184,.3)'),borderRadius:4}]},
         options:copts()
       });
     });
-  } catch(e) { errEl('p5c','Error: '+e.message); }
+  }catch(e){errEl('p5c','Error: '+e.message);}
 }
 
 loadDashboard();
