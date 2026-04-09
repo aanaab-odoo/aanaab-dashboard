@@ -270,11 +270,36 @@ async function loadDashboard(){
     for(let i=2;i<plH.length;i++){const d=parseD(plH[i]);if(d)plCols.push({label:d,i});}
     const gpr=key=>pl.find(r=>r&&r[0]&&String(r[0]).replace(/"/g,'').trim()===key);
     const gpv=row=>row?plCols.map(c=>pn(row[c.i])):plCols.map(()=>0);
-    const rv=gpv(gpr('income')),gpa=gpv(gpr('Discount')),np=gpv(pl[pl.length-1]);
+    const rv=gpv(gpr('income'));
+    const cogs=gpv(gpr('expense_direct_cost'));
+    // Gross Profit: use 'Discount' row if it differs from Revenue, else compute Revenue-COGS
+    const gpRaw=gpr('Discount');
+    const gpRawVals=gpRaw?gpv(gpRaw):null;
+    const gpa=(!gpRawVals||gpRawVals.every((v,i)=>Math.abs(v-(rv[i]||0))<1))
+      ? plCols.map((_,i)=>(rv[i]||0)-(cogs[i]||0))
+      : gpRawVals;
+    // Net Profit: last row with actual data
+    let npRow=null;
+    for(let ri=pl.length-1;ri>=0;ri--){
+      const r=pl[ri];if(!r||!r[0])continue;
+      const k=String(r[0]).replace(/"/g,'').trim();
+      if(k&&k!=='Items (SAR)'&&k!=='null'){
+        const v=plCols.map(c=>pn(r[c.i]));
+        if(v.some(x=>x!==0)){npRow=v;break;}
+      }
+    }
+    const np=npRow||plCols.map(()=>0);
     const p26=plCols.map((c,i)=>c.label.includes('2026')?i:-1).filter(i=>i>=0);
+    // Find latest month with revenue data
     let mi=plCols.length-1;while(mi>0&&Math.abs(rv[mi])<1)mi--;
-    setR('r-gm',rv[mi]?(gpa[mi]/rv[mi]*100).toFixed(1)+'%':'—',rv[mi]>0&&gpa[mi]>=0);
-    setR('r-nm',rv[mi]?(np[mi]/rv[mi]*100).toFixed(1)+'%':'—',rv[mi]>0&&np[mi]>=0);
+    // Use YTD 2026 sum for margins (more meaningful than single month)
+    const rvYtd=p26.reduce((s,i)=>s+(rv[i]||0),0);
+    const gpYtd=p26.reduce((s,i)=>s+(gpa[i]||0),0);
+    const npYtd=p26.reduce((s,i)=>s+(np[i]||0),0);
+    const gmPct=rvYtd?(gpYtd/rvYtd*100):0;
+    const nmPct=rvYtd?(npYtd/rvYtd*100):0;
+    setR('r-gm',rvYtd?gmPct.toFixed(1)+'%':'—',gmPct>=0);
+    setR('r-nm',rvYtd?nmPct.toFixed(1)+'%':'—',nmPct>=0);
 
     dc('trend');CH['trend']=new Chart(document.getElementById('c-trend').getContext('2d'),{
       type:'bar',data:{labels:p26.map(i=>plCols[i].label),datasets:[
@@ -311,10 +336,11 @@ async function loadRSAData(){
 
   const B2C=[1,2,3,4,5].map(i=>makeRow(raw[i],'B2C')).filter(Boolean);
   const B2B=[9,10,11].map(i=>makeRow(raw[i],'B2B')).filter(Boolean);
+  // B2G: individual projects rows 15-39, total is ALWAYS row 40
   const B2G=[];
   for(let i=15;i<=39;i++){const r=makeRow(raw[i],'B2G');if(r)B2G.push(r);}
-  // B2G total is row 40 - use it if individual projects sum is 0
-  const b2gTotalRow=raw[40];
+  // Row 40 = B2G Total (authoritative from Google Sheet)
+  const b2gTotalRow=raw[40]||raw[39];
   const b2gTotalVals=b2gTotalRow?dC.map(c=>pn(b2gTotalRow[c.i])):null;
 
   window._RD={dC,years,quarters,B2C,B2B,B2G,b2gTotalVals};
@@ -361,17 +387,14 @@ function renderRevenue(){
   const ix26=get26Idx(dC);
   const l26=ix26.map(i=>dC[i].label);
 
-  // KPI indices — use selected year (or all if 'all')
+  // KPI indices — use selected year (or 2026 if 'all')
   const kpiIdx = st.yr==='all' ? ix26 : getRevIdx(dC, st.yr, st.q);
   const kpiLabel = st.yr==='all' ? '2026 YTD' : (st.q==='all' ? st.yr : st.q+' '+st.yr);
 
   const sumIdx=(prods,idxs)=>prods.reduce((t,p)=>t+idxs.reduce((s,i)=>s+(p.vals[i]||0),0),0);
 
-  // For B2G: use individual project sums, fallback to total row if all zero
-  const b2gSum = sumIdx(fp.B2G, kpiIdx);
-  const b2gKPI = (b2gSum===0 && b2gTotalVals && fp.B2G.length===0)
-    ? kpiIdx.reduce((s,i)=>s+(b2gTotalVals[i]||0),0)
-    : b2gSum;
+  // B2G: ALWAYS use row 40 total values (authoritative)
+  const b2gKPI = b2gTotalVals ? kpiIdx.reduce((s,i)=>s+(b2gTotalVals[i]||0),0) : sumIdx(fp.B2G, kpiIdx);
 
   const ytdKPI={
     B2C: sumIdx(fp.B2C, kpiIdx),
@@ -380,8 +403,9 @@ function renderRevenue(){
   };
   const totKPI=ytdKPI.B2C+ytdKPI.B2B+ytdKPI.B2G;
 
-  // Still need 2026 for charts
-  const ytd26={B2C:sumIdx(fp.B2C,ix26),B2B:sumIdx(fp.B2B,ix26),B2G:sumIdx(fp.B2G,ix26)||kpiIdx===ix26?b2gKPI:sumIdx(fp.B2G,ix26)};
+  // 2026 for charts — also use row 40 for B2G
+  const b2g26 = b2gTotalVals ? ix26.reduce((s,i)=>s+(b2gTotalVals[i]||0),0) : sumIdx(fp.B2G,ix26);
+  const ytd26={B2C:sumIdx(fp.B2C,ix26),B2B:sumIdx(fp.B2B,ix26),B2G:b2g26};
   const tot26=ytd26.B2C+ytd26.B2B+ytd26.B2G;
 
   const sumYr=(prods,yr)=>{const yi=getYrIdx(dC,yr);return sumIdx(prods,yi);};
@@ -484,7 +508,8 @@ async function loadRevCompare(){
 }
 
 function renderRevCompare(){
-  const{dC,B2C,B2B,B2G}=window._RD;
+  if(!window._RD){return;}
+  const{dC,B2C,B2B,B2G,b2gTotalVals}=window._RD;
   const ay=document.getElementById('cmp-ay')?.value||'2026';
   const aq=document.getElementById('cmp-aq')?.value||'all';
   const by=document.getElementById('cmp-by')?.value||'2025';
@@ -496,9 +521,12 @@ function renderRevCompare(){
   const allP=[...B2C,...B2B,...B2G];
   const SC={B2C:C.b2c,B2B:C.b2b,B2G:C.b2g};
   const sumI=(prods,idxs)=>prods.reduce((t,p)=>t+idxs.reduce((s,i)=>s+(p.vals[i]||0),0),0);
+  // B2G always from row 40 total
+  const b2gA=b2gTotalVals?aidx.reduce((s,i)=>s+(b2gTotalVals[i]||0),0):sumI(B2G,aidx);
+  const b2gB=b2gTotalVals?bidx.reduce((s,i)=>s+(b2gTotalVals[i]||0),0):sumI(B2G,bidx);
 
-  const aTotal={B2C:sumI(B2C,aidx),B2B:sumI(B2B,aidx),B2G:sumI(B2G,aidx)};
-  const bTotal={B2C:sumI(B2C,bidx),B2B:sumI(B2B,bidx),B2G:sumI(B2G,bidx)};
+  const aTotal={B2C:sumI(B2C,aidx),B2B:sumI(B2B,aidx),B2G:b2gA};
+  const bTotal={B2C:sumI(B2C,bidx),B2B:sumI(B2B,bidx),B2G:b2gB};
   const aGrand=aTotal.B2C+aTotal.B2B+aTotal.B2G;
   const bGrand=bTotal.B2C+bTotal.B2B+bTotal.B2G;
   const delta=aGrand-bGrand;
@@ -535,7 +563,8 @@ function renderRevCompare(){
     <thead><tr><th>Stream</th><th>${pA}</th><th>${pB}</th><th>Change</th><th>%</th></tr></thead>
     <tbody>
     ${['B2C','B2B','B2G'].map(s=>{
-      const ap=sumI({B2C,B2B,B2G}[s],aidx);const bp=sumI({B2C,B2B,B2G}[s],bidx);
+      const ap=s==='B2G'?b2gA:sumI({B2C,B2B,B2G}[s],aidx);
+      const bp=s==='B2G'?b2gB:sumI({B2C,B2B,B2G}[s],bidx);
       const d=ap-bp;const dp=bp?(d/bp*100):0;
       return`<tr class="tot"><td><span class="bdg ${s.toLowerCase()}d">${s} Total</span></td><td class="pos">${fmt(ap)}</td><td>${fmt(bp)}</td><td class="${d>=0?'pos':'neg'}">${d>=0?'+':''}${fmt(d)}</td><td class="${d>=0?'pos':'neg'}">${d>=0?'+':''}${dp.toFixed(1)}%</td></tr>
       ${[...B2C,...B2B,...B2G].filter(p=>p.seg===s).map(p=>{
@@ -551,12 +580,12 @@ function renderRevCompare(){
 
   dc('crev');CH['crev']=new Chart(document.getElementById('c-crev').getContext('2d'),{
     type:'bar',data:{labels:['B2C','B2B','B2G'],datasets:[
-      {label:pA,data:['B2C','B2B','B2G'].map(s=>sumI({B2C,B2B,B2G}[s],aidx)),backgroundColor:'rgba(91,33,182,.7)',borderRadius:4},
-      {label:pB,data:['B2C','B2B','B2G'].map(s=>sumI({B2C,B2B,B2G}[s],bidx)),backgroundColor:'rgba(148,163,184,.5)',borderRadius:4},
+      {label:pA,data:[sumI(B2C,aidx),sumI(B2B,aidx),b2gA],backgroundColor:'rgba(91,33,182,.7)',borderRadius:4},
+      {label:pB,data:[sumI(B2C,bidx),sumI(B2B,bidx),b2gB],backgroundColor:'rgba(148,163,184,.5)',borderRadius:4},
     ]},options:copts()
   });
   dc('crevd');CH['crevd']=new Chart(document.getElementById('c-crevd').getContext('2d'),{
-    type:'doughnut',data:{labels:['B2C','B2B','B2G'],datasets:[{data:['B2C','B2B','B2G'].map(s=>sumI({B2C,B2B,B2G}[s],aidx)),backgroundColor:[C.b2c,C.b2b,C.b2g],borderWidth:0}]},
+    type:'doughnut',data:{labels:['B2C','B2B','B2G'],datasets:[{data:[sumI(B2C,aidx),sumI(B2B,aidx),b2gA],backgroundColor:[C.b2c,C.b2b,C.b2g],borderWidth:0}]},
     options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{position:'bottom',labels:{color:C.tc,font:{size:11},padding:8}}}}
   });
 }
@@ -575,18 +604,43 @@ async function loadPLData(){
   const years=[...new Set(dC.map(c=>c.label.split(' ')[1]).filter(Boolean))].sort();
   const gR=key=>raw.find(r=>r&&r[0]&&String(r[0]).replace(/^"|"$/g,'').trim()===key);
   const gV=row=>row?dC.map(c=>pn(row[c.i])):dC.map(()=>0);
+
+  // Revenue and COGS
+  const rvVals=gV(gR('income'));
+  const cogsVals=gV(gR('expense_direct_cost'));
+
+  // Gross Profit: 'Discount' is Odoo internal key for GP row. Verify by checking it's not same as Revenue.
+  // If GP row gives same values as Revenue, compute GP = Revenue - COGS instead
+  const gpRaw=gR('Discount');
+  let gpVals=gpRaw?gV(gpRaw):null;
+  if(!gpVals||gpVals.every((v,i)=>Math.abs(v-(rvVals[i]||0))<1)){
+    gpVals=dC.map((_,idx)=>(rvVals[idx]||0)-(cogsVals[idx]||0));
+  }
+
+  // Net Profit: last row that has data and is not a header
+  let npVals=null;
+  for(let ri=raw.length-1;ri>=0;ri--){
+    const r=raw[ri];if(!r||!r[0])continue;
+    const k=String(r[0]).replace(/^"|"$/g,'').trim();
+    if(k&&k!=='Items (SAR)'&&k!=='null'){
+      const v=dC.map(c=>pn(r[c.i]));
+      if(v.some(x=>x!==0)){npVals=v;break;}
+    }
+  }
+  if(!npVals)npVals=dC.map(()=>0);
+
   const rows=[
-    {label:'Revenue',vals:gV(gR('income')),cls:'pl-rv'},
-    {label:'Cost of Revenue',vals:gV(gR('expense_direct_cost')),cls:''},
-    {label:'Gross Profit',vals:gV(gR('Discount')),cls:'pl-gp'},
+    {label:'Revenue',vals:rvVals,cls:'pl-rv'},
+    {label:'Cost of Revenue',vals:cogsVals,cls:''},
+    {label:'Gross Profit',vals:gpVals,cls:'pl-gp'},
     {label:'Salaries & Benefits',vals:gV(gR('Employees')),cls:''},
     {label:'Marketing',vals:gV(gR('Marketing')),cls:''},
     {label:'Other OPEX',vals:gV(gR('Others')),cls:''},
     {label:'EBITDA',vals:gV(raw[10]),cls:'pl-eb'},
     {label:'Other Income',vals:gV(gR('income_other')),cls:''},
-    {label:'Net Profit / Loss',vals:gV(raw[raw.length-1]),cls:'pl-np'},
+    {label:'Net Profit / Loss',vals:npVals,cls:'pl-np'},
   ];
-  window._PLD={dC,rows,years,raw};
+  window._PLD={dC,rows,years,raw,rvVals,cogsVals,gpVals,npVals};
   return window._PLD;
 }
 
