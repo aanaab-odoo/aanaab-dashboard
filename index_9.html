@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>aanaab Financial Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f4ff;--s:#fff;--s2:#faf9ff;--s3:#ede9ff;--bd:#e2deff;--bd2:#d0c9ff;--pu:#5b21b6;--p2:#7c3aed;--p3:#ede9fe;--gn:#10b981;--bl:#3b82f6;--am:#f59e0b;--rd:#ef4444;--tx:#1e1b4b;--tx2:#4c1d95;--mu:#6b7280}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh}
+nav{position:sticky;top:0;z-index:100;background:rgba(91,33,182,.97);backdrop-filter:blur(12px);display:flex;align-items:center;padding:0 20px;height:54px;gap:1px;overflow-x:auto;box-shadow:0 2px 16px rgba(91,33,182,.3)}
+.logo{display:flex;align-items:center;gap:8px;margin-right:18px;white-space:nowrap}
+.logo-text{font-size:.9rem;font-weight:800;color:#fff}
+.logo-dot{width:8px;height:8px;border-radius:50%;background:#10b981}
+.nb{height:54px;padding:0 12px;background:transparent;border:none;color:rgba(255,255,255,.6);font-family:'Plus Jakarta Sans',sans-serif;font-size:.7rem;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap}
+.nb:hover{color:#fff}.nb.active{color:#fff;border-bottom-color:#10b981}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:8px;white-space:nowrap}
+.sbtn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:8px;color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-size:.7rem;font-weight:600;padding:6px 12px;cursor:pointer}
+.sbtn:hover{background:rgba(255,255,255,.25)}
+.ldot{width:7px;height:7px;border-radius:50%;background:#10b981;box-shadow:0 0 6px #10b981;animation:pulse 2s infinite}
+.ldot.err{background:#ef4444;box-shadow:0 0 6px #ef4444}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.slbl{font-size:.67rem;color:rgba(255,255,255,.6)}
+.page{display:none;padding:20px;min-height:calc(100vh - 54px)}.page.active{display:block}
+.pt{font-size:1.1rem;font-weight:800;color:var(--tx);margin-bottom:3px}
+.ps{font-size:.74rem;color:var(--mu);margin-bottom:18px}
+.st{font-size:.67rem;font-weight:700;color:var(--pu);text-transform:uppercase;letter-spacing:2px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.st::after{content:'';flex:1;height:1px;background:var(--bd)}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.g2{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:14px}
+.g2e{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px}
+.kpi{background:var(--s);border:1.5px solid var(--bd);border-radius:14px;padding:16px;position:relative;overflow:hidden;transition:all .2s;box-shadow:0 1px 4px rgba(91,33,182,.06)}
+.kpi:hover{border-color:var(--bd2);transform:translateY(-1px)}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--c,var(--pu)),transparent)}
+.kl{font-size:.67rem;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:1px;margin-bottom:7px}
+.kv{font-size:1.35rem;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--tx);line-height:1}
+.ks{font-size:.67rem;color:var(--mu);margin-top:5px}
+.ki{width:30px;height:30px;border-radius:8px;font-size:.95rem;position:absolute;top:14px;right:14px;display:flex;align-items:center;justify-content:center}
+.rg{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+.rc{background:var(--s);border:1.5px solid var(--bd);border-radius:14px;padding:13px 16px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 1px 4px rgba(91,33,182,.06)}
+.rn{font-size:.7rem;font-weight:700;color:var(--mu)}.rdd{font-size:.63rem;color:#9ca3af;margin-top:2px}
+.rv{font-size:1.35rem;font-weight:800;font-family:'JetBrains Mono',monospace}
+.cc{background:var(--s);border:1.5px solid var(--bd);border-radius:14px;padding:17px;margin-bottom:14px;box-shadow:0 1px 4px rgba(91,33,182,.06)}
+.ct{font-size:.77rem;font-weight:700;color:var(--tx);margin-bottom:13px;display:flex;align-items:center;justify-content:space-between}
+.cs{font-size:.67rem;font-weight:400;color:var(--mu)}
+.fb{background:var(--s);border:1.5px solid var(--bd);border-radius:12px;padding:13px 16px;margin-bottom:14px;display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start}
+.fg{display:flex;flex-direction:column;gap:6px}
+.fl{font-size:.65rem;font-weight:700;color:var(--pu);text-transform:uppercase;letter-spacing:1px}
+.chips{display:flex;flex-wrap:wrap;gap:4px}
+.chip{padding:4px 10px;border-radius:20px;font-size:.71rem;font-weight:600;cursor:pointer;border:1.5px solid var(--bd2);background:var(--s2);color:var(--mu);transition:all .15s;user-select:none}
+.chip:hover{border-color:var(--p2);color:var(--p2)}
+.chip.on{background:var(--p2);border-color:var(--p2);color:#fff}
+.chip.cb.on{background:#3b82f6;border-color:#3b82f6}
+.chip.cg.on{background:#10b981;border-color:#10b981}
+.chip.ca.on{background:#f59e0b;border-color:#f59e0b}
+.rbtn{padding:4px 12px;border-radius:20px;font-size:.71rem;font-weight:600;cursor:pointer;border:1.5px solid var(--bd2);background:transparent;color:var(--mu)}
+.rbtn:hover{border-color:var(--rd);color:var(--rd)}
+.tw{overflow-x:auto;border-radius:10px;border:1.5px solid var(--bd);margin-bottom:14px;background:var(--s)}
+table{width:100%;border-collapse:collapse;font-size:.72rem}
+thead th{background:var(--s3);color:var(--pu);font-weight:700;padding:8px 10px;text-align:right;font-size:.67rem;white-space:nowrap;position:sticky;top:0;z-index:1}
+thead th:first-child{text-align:left;position:sticky;left:0;background:var(--s3);z-index:2}
+tbody td{padding:6px 10px;border-bottom:1px solid var(--bd);text-align:right;font-family:'JetBrains Mono',monospace;font-size:.7rem;white-space:nowrap;color:var(--tx)}
+tbody td:first-child{text-align:left;font-family:'Plus Jakarta Sans',sans-serif;color:var(--tx2);font-weight:500;position:sticky;left:0;background:var(--s)}
+tr.tot td{font-weight:700;background:var(--p3)!important;color:var(--pu)!important}
+tr.tot td:first-child{background:var(--p3)!important}
+tr:hover td{background:#faf9ff}
+.pos{color:#059669!important}.neg{color:#dc2626!important}
+tfoot tr.tf td{font-weight:800;background:var(--s3)!important;color:var(--pu)!important}
+.pl-rv td:first-child{color:var(--p2)!important;font-weight:700!important}
+.pl-gp td,.pl-gp td:first-child{background:#ecfdf5!important;color:#065f46!important;font-weight:700!important}
+.pl-eb td,.pl-eb td:first-child{background:var(--p3)!important;color:var(--pu)!important;font-weight:700!important}
+.pl-np td,.pl-np td:first-child{background:#1e1b4b!important;color:#fff!important;font-weight:700!important}
+.ld{text-align:center;padding:50px;color:var(--mu);font-size:.84rem}
+.spin{display:inline-block;width:18px;height:18px;border:2px solid var(--bd2);border-top-color:var(--pu);border-radius:50%;animation:spin .8s linear infinite;margin-right:8px;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+select{background:var(--s2);border:1.5px solid var(--bd2);color:var(--tx);padding:4px 8px;border-radius:8px;font-size:.71rem;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600}
+.bdg{display:inline-block;padding:2px 7px;border-radius:4px;font-size:.66rem;font-weight:700}
+.b2cd{background:#dbeafe;color:#1d4ed8}.b2bd{background:#d1fae5;color:#065f46}.b2gd{background:#fef3c7;color:#92400e}
+.pi{margin-bottom:10px}.ph{display:flex;justify-content:space-between;margin-bottom:4px}
+.pn{font-size:.73rem;color:var(--tx);font-weight:600}.pv{font-size:.69rem;font-family:'JetBrains Mono',monospace;color:var(--mu)}
+.pb{height:6px;background:var(--s3);border-radius:3px;overflow:hidden}
+.pf{height:100%;border-radius:3px;transition:width 1s ease}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo"><div class="logo-dot"></div><span class="logo-text">aanaab Finance</span></div>
+  <button class="nb active" onclick="showPage('p1',this)">📊 Daily</button>
+  <button class="nb" onclick="showPage('p2',this);loadTab('p2')">📈 Revenue</button>
+  <button class="nb" onclick="showPage('p2c',this);loadTab('p2c')">🔄 Rev Compare</button>
+  <button class="nb" onclick="showPage('p3',this);loadTab('p3')">📋 P&L</button>
+  <button class="nb" onclick="showPage('p3c',this);loadTab('p3c')">🔄 P&L Compare</button>
+  <button class="nb" onclick="showPage('p4',this);loadTab('p4')">🎯 Rev vs Target</button>
+  <button class="nb" onclick="showPage('p5',this);loadTab('p5')">💼 Spend vs Budget</button>
+  <div class="nav-right">
+    <button class="sbtn" onclick="syncAll()">🔄 Sync</button>
+    <span class="ldot" id="dot"></span>
+    <span class="slbl" id="slbl">Connecting...</span>
+  </div>
+</nav>
+
+<!-- P1: DAILY -->
+<div class="page active" id="p1">
+  <div class="pt">Daily Dashboard</div>
+  <div class="ps">Key financial metrics · <span id="lbl">Loading...</span></div>
+  <div class="st">Balance Overview</div>
+  <div class="g4">
+    <div class="kpi" style="--c:#5b21b6"><div class="ki" style="background:#ede9fe">🏦</div><div class="kl">Total Bank Balance</div><div class="kv" id="d-bank">—</div><div class="ks">SAR · Combined accounts</div></div>
+    <div class="kpi" style="--c:#7c3aed"><div class="ki" style="background:#ddd6fe">🏦</div><div class="kl">Alriyad Bank</div><div class="kv" id="d-alriyad">—</div><div class="ks">SAR · Account 100002</div></div>
+    <div class="kpi" style="--c:#3b82f6"><div class="ki" style="background:#dbeafe">💰</div><div class="kl">Receivables</div><div class="kv" id="d-ar">—</div><div class="ks">SAR · 120010 + 120012</div></div>
+    <div class="kpi" style="--c:#f59e0b"><div class="ki" style="background:#fef3c7">💸</div><div class="kl">Payables</div><div class="kv" id="d-ap">—</div><div class="ks">SAR · Account 200010</div></div>
+  </div>
+  <div class="g4">
+    <div class="kpi" style="--c:#ef4444"><div class="ki" style="background:#fee2e2">🏛️</div><div class="kl">Short Term Loans</div><div class="kv" id="d-st">—</div><div class="ks">SAR · Account 265020</div></div>
+    <div class="kpi" style="--c:#dc2626"><div class="ki" style="background:#fee2e2">🏛️</div><div class="kl">Long Term Loans</div><div class="kv" id="d-lt">—</div><div class="ks">SAR · Account 265070</div></div>
+    <div class="kpi" style="--c:#10b981"><div class="ki" style="background:#d1fae5">📊</div><div class="kl">Net Position</div><div class="kv" id="d-net">—</div><div class="ks">SAR · Bank − Total Loans</div></div>
+    <div class="kpi" style="--c:#06b6d4"><div class="ki" style="background:#cffafe">⏱️</div><div class="kl">Cash Runway</div><div class="kv" id="d-runway">—</div><div class="ks">months · at 1.2M/month burn</div></div>
+  </div>
+  <div class="st">Financial Ratios</div>
+  <div class="rg">
+    <div class="rc"><div><div class="rn">Current Ratio</div><div class="rdd">Current Assets / Liabilities</div></div><div class="rv" id="r-cr">—</div></div>
+    <div class="rc"><div><div class="rn">Debt to Equity</div><div class="rdd">Total Debt / Equity</div></div><div class="rv" id="r-de">—</div></div>
+    <div class="rc"><div><div class="rn">Gross Margin</div><div class="rdd">Gross Profit / Revenue</div></div><div class="rv" id="r-gm">—</div></div>
+    <div class="rc"><div><div class="rn">Net Margin</div><div class="rdd">Net Profit / Revenue</div></div><div class="rv" id="r-nm">—</div></div>
+  </div>
+  <div class="cc"><div class="ct">Revenue & Profit Trend <span class="cs">2026</span></div><div style="height:230px"><canvas id="c-trend"></canvas></div></div>
+</div>
+
+<!-- P2: REVENUE -->
+<div class="page" id="p2"><div class="pt">Revenue Analysis</div><div class="ps">All years · Revenue stream analysis</div><div id="p2-content"><div class="ld"><span class="spin"></span>Loading...</div></div></div>
+
+<!-- P2C: REV COMPARE -->
+<div class="page" id="p2c"><div class="pt">Revenue Comparison</div><div class="ps">Compare two periods side by side</div><div id="p2cc"><div class="ld"><span class="spin"></span>Loading...</div></div></div>
+
+<!-- P3: P&L -->
+<div class="page" id="p3"><div class="pt">P&L Monthly</div><div class="ps">P&L sheet · all months 2019→2026</div><div id="p3-content"><div class="ld"><span class="spin"></span>Loading...</div></div></div>
+
+<!-- P3C: P&L COMPARE -->
+<div class="page" id="p3c"><div class="pt">P&L Comparison</div><div class="ps">Compare two years side by side</div><div id="p3cc"><div class="ld"><span class="spin"></span>Loading...</div></div></div>
+
+<!-- P4: REV VS TARGET -->
+<div class="page" id="p4"><div class="pt">Revenue vs Target 2026</div><div class="ps">YTD vs annual targets</div><div id="p4c"><div class="ld"><span class="spin"></span>Loading...</div></div></div>
+
+<!-- P5: BUDGET -->
+<div class="page" id="p5"><div class="pt">Actual Spend vs Budget 2026</div><div class="ps">Actual spend Vs Budget 2026 sheet</div><div id="p5c"><div class="ld"><span class="spin"></span>Loading...</div></div></div>
+
+<script>
+// ============================================================
+// CONFIG
+// ============================================================
+const API = 'https://script.google.com/macros/s/AKfycbzWOZGslrf9f6T5hw6APOSAsKwo-qpJuf8HnjgaXvHDDvuLPVLtZuJpzHvpQFKV2v0W1Q/exec';
+const BURN_RATE = 1200000;
+const C = {pu:'#5b21b6',p2:'#7c3aed',gn:'#10b981',bl:'#3b82f6',am:'#f59e0b',rd:'#ef4444',b2c:'#3b82f6',b2b:'#10b981',b2g:'#f59e0b',gr:'#e2deff',tc:'#9ca3af'};
+const MN = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const loaded = {}, CH = {};
+let _D = null; // cached API data
+
+// ============================================================
+// HELPERS
+// ============================================================
+function fmtK(n){if(!n&&n!==0)return'—';const s=n<0?'-':'',a=Math.abs(n);if(a>=1e6)return s+(a/1e6).toFixed(2)+'M';if(a>=1e3)return s+(a/1e3).toFixed(1)+'K';return s+Math.round(a).toLocaleString();}
+const fmt = n => new Intl.NumberFormat('en-US',{maximumFractionDigits:0}).format(Math.round(n||0));
+const pcC = p => p>=50?C.gn:p>=20?C.am:C.rd;
+const dc = id => {if(CH[id]){CH[id].destroy();delete CH[id];}};
+function showPage(id,btn){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));document.getElementById(id).classList.add('active');btn.classList.add('active');}
+function loadTab(id){if(loaded[id])return;loaded[id]=true;({p2:loadRevenue,'p2c':loadRevCompare,p3:loadPL,'p3c':loadPLCompare,p4:loadRevTarget,p5:loadBudget})[id]?.();}
+const errEl=(id,msg)=>document.getElementById(id).innerHTML=`<div class="ld" style="color:var(--rd)">❌ ${msg}</div>`;
+function copts(stacked){const o={responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:C.tc,font:{size:11,family:'Plus Jakarta Sans'}}}},scales:{x:{ticks:{color:C.tc,font:{size:10},maxRotation:45},grid:{color:C.gr}},y:{ticks:{color:C.tc,font:{size:10},callback:v=>fmtK(v)},grid:{color:C.gr}}}};if(stacked){o.scales.x.stacked=true;o.scales.y.stacked=true;}return o;}
+function setR(id,v,good){const el=document.getElementById(id);el.textContent=v;el.style.color=good?C.gn:C.rd;}
+function syncAll(){Object.keys(loaded).forEach(k=>delete loaded[k]);_D=null;loadDashboard();const at=document.querySelector('.page.active')?.id;if(at&&at!=='p1'){loaded[at]=false;loadTab(at);}}
+
+// ============================================================
+// FETCH API DATA
+// ============================================================
+async function fetchData(type='all'){
+  const r = await fetch(API+'?data='+type);
+  if(!r.ok) throw new Error('HTTP '+r.status);
+  return r.json();
+}
+
+// ============================================================
+// P1: DAILY DASHBOARD
+// ============================================================
+async function loadDashboard(){
+  try{
+    document.getElementById('slbl').textContent='Loading...';
+    const d = await fetchData('all');
+    _D = d;
+    const {tb, bs, pl} = d;
+
+    // TB - find latest date with data
+    const tbDates = tb.dates;
+    let latestDate = tbDates[tbDates.length-1];
+    // find latest with actual data
+    for(let i=tbDates.length-1;i>=0;i--){
+      const hasData = tb.accounts.some(a=>Math.abs(a.vals[tbDates[i]]||0)>0.01);
+      if(hasData){latestDate=tbDates[i];break;}
+    }
+    document.getElementById('lbl').textContent=latestDate;
+    document.getElementById('slbl').textContent='Live · '+latestDate;
+
+    const ga=code=>tb.accounts.find(a=>a.code===code)?.vals[latestDate]||0;
+    const bank=[100001,100002,100003,100004,100006,100007].reduce((s,c)=>s+ga(c),0);
+    const alr=ga(100002),ar=ga(120010)+ga(120012),ap=ga(200010),st=ga(265020),lt=ga(265070),net=bank-(st+lt);
+    [['d-bank',bank],['d-alriyad',alr],['d-ar',ar],['d-ap',ap],['d-st',st],['d-lt',lt]].forEach(([id,v])=>document.getElementById(id).textContent=fmtK(v)+' SAR');
+    const nel=document.getElementById('d-net');nel.textContent=fmtK(net)+' SAR';nel.style.color=net>=0?C.gn:C.rd;
+    const runway=bank/BURN_RATE;
+    const rel=document.getElementById('d-runway');rel.textContent=runway.toFixed(1)+' months';rel.style.color=runway>=6?C.gn:runway>=3?C.am:C.rd;
+
+    // BS ratios
+    const gts=types=>bs.accounts.filter(a=>types.includes(a.type)).reduce((s,a)=>s+(a.vals[latestDate]||0),0);
+    const ca=gts(['asset_receivable','asset_cash','asset_current','asset_prepayments']);
+    const cl=gts(['liability_payable','liability_credit_card','liability_current']);
+    const ncl=gts(['liability_non_current']),eq=gts(['equity','equity_unaffected']);
+    setR('r-cr',cl>0?(ca/cl).toFixed(2)+'x':'—',cl>0&&ca/cl>=1.5);
+    setR('r-de',eq>0?((cl+ncl)/eq).toFixed(2)+'x':'—',eq>0&&(cl+ncl)/eq<=1);
+
+    // P&L margins - 2026 YTD
+    const p26idx = pl.dates.map((d,i)=>d.includes('2026')?i:-1).filter(i=>i>=0);
+    const rvYtd=p26idx.reduce((s,i)=>s+(pl.revenue[i]||0),0);
+    const gpYtd=p26idx.reduce((s,i)=>s+(pl.grossProfit[i]||0),0);
+    const npYtd=p26idx.reduce((s,i)=>s+(pl.netProfit[i]||0),0);
+    const gmPct=rvYtd?(gpYtd/rvYtd*100):0;
+    const nmPct=rvYtd?(npYtd/rvYtd*100):0;
+    setR('r-gm',rvYtd?gmPct.toFixed(1)+'%':'—',gmPct>=0);
+    setR('r-nm',rvYtd?nmPct.toFixed(1)+'%':'—',nmPct>=0);
+
+    // Trend chart 2026
+    const l26=p26idx.map(i=>pl.dates[i]);
+    dc('trend');CH['trend']=new Chart(document.getElementById('c-trend').getContext('2d'),{
+      type:'bar',data:{labels:l26,datasets:[
+        {label:'Revenue',data:p26idx.map(i=>pl.revenue[i]),backgroundColor:'rgba(91,33,182,.55)',borderRadius:5,order:2},
+        {label:'Gross Profit',data:p26idx.map(i=>pl.grossProfit[i]),type:'line',borderColor:C.gn,borderWidth:2.5,pointRadius:3,tension:.3,fill:false,order:1},
+        {label:'Net Profit',data:p26idx.map(i=>pl.netProfit[i]),type:'line',borderColor:C.am,borderWidth:2.5,pointRadius:3,tension:.3,fill:false,order:0},
+      ]},options:copts()
+    });
+    document.getElementById('dot').className='ldot';
+  }catch(e){console.error(e);document.getElementById('slbl').textContent='Error: '+e.message;document.getElementById('dot').className='ldot err';}
+}
+
+// ============================================================
+// P2: REVENUE
+// ============================================================
+window._RS={seg:'all',yr:'all',q:'all',projs:new Set()};
+async function loadRevenue(){
+  try{
+    if(!_D) _D=await fetchData('all');
+    renderRevenue();
+  }catch(e){errEl('p2-content','Error: '+e.message);}
+}
+
+function getRevIdx(dates,yr,q){
+  if(yr==='all') return dates.map((_,i)=>i);
+  if(q==='all') return dates.map((d,i)=>d.includes(yr)?i:-1).filter(i=>i>=0);
+  const qm={Q1:['Jan','Feb','Mar'],Q2:['Apr','May','Jun'],Q3:['Jul','Aug','Sep'],Q4:['Oct','Nov','Dec']};
+  const ms=qm[q]||[];
+  return dates.map((d,i)=>{const [m,y]=d.split(' ');return y===yr&&ms.includes(m)?i:-1;}).filter(i=>i>=0);
+}
+
+function renderRevenue(){
+  const {rsa} = _D;
+  const {dates,b2c,b2b,b2g,b2gTotal} = rsa;
+  const st=window._RS;
+  const years=[...new Set(dates.map(d=>d.split(' ')[1]).filter(Boolean))].sort();
+  const quarters=['Q1','Q2','Q3','Q4'];
+
+  const fp={B2C:[],B2B:[],B2G:[]};
+  [{B2C:b2c},{B2B:b2b},{B2G:b2g}].forEach(obj=>{
+    const s=Object.keys(obj)[0];
+    if(st.seg!=='all'&&st.seg!==s) return;
+    fp[s]=obj[s].filter(p=>st.projs.size===0||st.projs.has(p.name));
+  });
+  const allP=[...b2c,...b2b,...b2g];
+
+  const ix26=dates.map((d,i)=>d.includes('2026')?i:-1).filter(i=>i>=0);
+  const l26=ix26.map(i=>dates[i]);
+  const kpiIdx=st.yr==='all'?ix26:getRevIdx(dates,st.yr,st.q);
+  const kpiLabel=st.yr==='all'?'2026 YTD':(st.q==='all'?st.yr:st.q+' '+st.yr);
+  const dispIdx=getRevIdx(dates,st.yr,st.q);
+  const dispL=dispIdx.map(i=>dates[i]);
+
+  const sumIdx=(prods,idxs)=>prods.reduce((t,p)=>t+idxs.reduce((s,i)=>s+(p.vals[i]||0),0),0);
+  const sumYr=(prods,yr)=>sumIdx(prods,dates.map((d,i)=>d.includes(yr)?i:-1).filter(i=>i>=0));
+
+  // B2G KPI from b2gTotal (authoritative)
+  const b2gKPI=b2gTotal?kpiIdx.reduce((s,i)=>s+(b2gTotal[i]||0),0):sumIdx(fp.B2G,kpiIdx);
+  const b2g26=b2gTotal?ix26.reduce((s,i)=>s+(b2gTotal[i]||0),0):sumYr(b2g,'2026');
+  const ytdKPI={B2C:sumIdx(fp.B2C,kpiIdx),B2B:sumIdx(fp.B2B,kpiIdx),B2G:b2gKPI};
+  const totKPI=ytdKPI.B2C+ytdKPI.B2B+ytdKPI.B2G;
+  const SC={B2C:C.b2c,B2B:C.b2b,B2G:C.b2g};
+
+  document.getElementById('p2-content').innerHTML=`
+  <div class="fb">
+    <div class="fg"><div class="fl">Segment</div><div class="chips">
+      <span class="chip ${st.seg==='all'?'on':''}" onclick="setRF('seg','all')">All</span>
+      <span class="chip cb ${st.seg==='B2C'?'on':''}" onclick="setRF('seg','B2C')">B2C</span>
+      <span class="chip cg ${st.seg==='B2B'?'on':''}" onclick="setRF('seg','B2B')">B2B</span>
+      <span class="chip ca ${st.seg==='B2G'?'on':''}" onclick="setRF('seg','B2G')">B2G</span>
+    </div></div>
+    <div class="fg"><div class="fl">Year</div><div class="chips">
+      <span class="chip ${st.yr==='all'?'on':''}" onclick="setRF('yr','all')">All</span>
+      ${years.map(y=>`<span class="chip ${st.yr===y?'on':''}" onclick="setRF('yr','${y}')">${y}</span>`).join('')}
+    </div></div>
+    <div class="fg"><div class="fl">Quarter</div><div class="chips">
+      <span class="chip ${st.q==='all'?'on':''}" onclick="setRF('q','all')">All Q</span>
+      ${quarters.map(q=>`<span class="chip ${st.q===q?'on':''}" onclick="setRF('q','${q}')">${q}</span>`).join('')}
+    </div></div>
+    <div style="align-self:flex-end"><button class="rbtn" onclick="resetRF()">↺ Reset</button></div>
+  </div>
+  <div class="g4">
+    <div class="kpi" style="--c:#5b21b6"><div class="kl">Total Revenue</div><div class="kv" style="color:#5b21b6">${fmtK(totKPI)}</div><div class="ks">SAR · ${kpiLabel}</div></div>
+    ${['B2C','B2B','B2G'].map(s=>`<div class="kpi" style="--c:${SC[s]}"><div class="kl">${s}</div><div class="kv" style="color:${SC[s]}">${fmtK(ytdKPI[s])}</div><div class="ks">${totKPI>0?(ytdKPI[s]/totKPI*100).toFixed(1)+'%':'-'} · ${kpiLabel}</div></div>`).join('')}
+  </div>
+  <div class="g2">
+    <div class="cc"><div class="ct">Monthly Revenue <span class="cs">2026</span></div><div style="height:220px"><canvas id="c-rm"></canvas></div></div>
+    <div class="cc"><div class="ct">Annual by Segment <span class="cs">All years</span></div><div style="height:220px"><canvas id="c-ra"></canvas></div></div>
+  </div>
+  <div class="tw"><table><thead><tr><th>Segment</th><th>Product</th>${dispL.map(m=>`<th>${m}</th>`).join('')}<th>Total</th></tr></thead><tbody>
+  ${[...fp.B2C,...fp.B2B,...fp.B2G].sort((a,b)=>sumIdx([b],ix26)-sumIdx([a],ix26)).map(p=>{
+    const rt=sumIdx([p],dispIdx);
+    return`<tr><td><span class="bdg ${(p.seg||'b2g').toLowerCase()}d">${p.seg||''}</span> ${p.name}</td><td style="display:none"></td>${dispIdx.map(i=>{const v=p.vals[i]||0;return`<td class="${v>0?'pos':''}}">${v>0?fmtK(v):'—'}</td>`;}).join('')}<td class="pos" style="font-weight:700">${fmtK(rt)}</td></tr>`;
+  }).join('')}
+  </tbody></table></div>`;
+
+  dc('rm');CH['rm']=new Chart(document.getElementById('c-rm').getContext('2d'),{
+    type:'bar',data:{labels:l26,datasets:['B2C','B2B','B2G'].map((s,i)=>({label:s,data:l26.map((_,mi)=>{
+      if(s==='B2G')return b2gTotal?b2gTotal[ix26[mi]]||0:fp.B2G.reduce((t,p)=>t+(p.vals[ix26[mi]]||0),0);
+      return fp[s].reduce((t,p)=>t+(p.vals[ix26[mi]]||0),0);
+    }),backgroundColor:['rgba(59,130,246,.7)','rgba(16,185,129,.7)','rgba(245,158,11,.7)'][i],borderRadius:4}))},
+    options:copts(true)
+  });
+  dc('ra');CH['ra']=new Chart(document.getElementById('c-ra').getContext('2d'),{
+    type:'bar',data:{labels:years,datasets:['B2C','B2B','B2G'].map((s,i)=>({label:s,data:years.map(yr=>s==='B2G'?dates.map((d,di)=>d.includes(yr)?di:-1).filter(i=>i>=0).reduce((t,i)=>t+(b2gTotal?b2gTotal[i]:0)||0,0):sumYr(fp[s],yr)),backgroundColor:['rgba(59,130,246,.7)','rgba(16,185,129,.7)','rgba(245,158,11,.7)'][i],borderRadius:4}))},
+    options:copts()
+  });
+}
+
+function setRF(t,v){const s=window._RS;if(t==='seg')s.seg=v;else if(t==='yr'){s.yr=v;if(v==='all')s.q='all';}else if(t==='q')s.q=v;else{if(s.projs.has(v))s.projs.delete(v);else s.projs.add(v);}['rm','ra'].forEach(dc);renderRevenue();}
+function resetRF(){window._RS={seg:'all',yr:'all',q:'all',projs:new Set()};['rm','ra'].forEach(dc);renderRevenue();}
+
+// ============================================================
+// P2C: REV COMPARE
+// ============================================================
+async function loadRevCompare(){
+  try{
+    if(!_D) _D=await fetchData('all');
+    const {rsa}=_D;
+    const years=[...new Set(rsa.dates.map(d=>d.split(' ')[1]).filter(Boolean))].sort();
+    const quarters=['Q1','Q2','Q3','Q4'];
+    document.getElementById('p2cc').innerHTML=`
+    <div class="fb" style="margin-bottom:16px">
+      <div class="fg"><div class="fl">Period A — Year</div><select id="cmp-ay" onchange="renderRevCompare()">${years.map(y=>`<option value="${y}"${y==='2026'?' selected':''}>${y}</option>`).join('')}</select></div>
+      <div class="fg"><div class="fl">Period A — Quarter</div><select id="cmp-aq" onchange="renderRevCompare()"><option value="all">All Year</option>${quarters.map(q=>`<option>${q}</option>`).join('')}</select></div>
+      <div style="display:flex;align-items:center;font-size:1.5rem;color:var(--mu);align-self:flex-end;padding-bottom:4px">vs</div>
+      <div class="fg"><div class="fl">Period B — Year</div><select id="cmp-by" onchange="renderRevCompare()">${years.map(y=>`<option value="${y}"${y==='2025'?' selected':''}>${y}</option>`).join('')}</select></div>
+      <div class="fg"><div class="fl">Period B — Quarter</div><select id="cmp-bq" onchange="renderRevCompare()"><option value="all">All Year</option>${quarters.map(q=>`<option>${q}</option>`).join('')}</select></div>
+    </div>
+    <div id="cmp-rev-content"><div class="ld"><span class="spin"></span>Loading...</div></div>`;
+    renderRevCompare();
+  }catch(e){errEl('p2cc','Error: '+e.message);}
+}
+
+function renderRevCompare(){
+  if(!_D)return;
+  const {rsa}=_D;
+  const {dates,b2c,b2b,b2g,b2gTotal}=rsa;
+  const ay=document.getElementById('cmp-ay')?.value||'2026';
+  const aq=document.getElementById('cmp-aq')?.value||'all';
+  const by=document.getElementById('cmp-by')?.value||'2025';
+  const bq=document.getElementById('cmp-bq')?.value||'all';
+  const aidx=getRevIdx(dates,ay,aq);
+  const bidx=getRevIdx(dates,by,bq);
+  const sumI=(prods,idxs)=>prods.reduce((t,p)=>t+idxs.reduce((s,i)=>s+(p.vals[i]||0),0),0);
+  const b2gA=b2gTotal?aidx.reduce((s,i)=>s+(b2gTotal[i]||0),0):sumI(b2g,aidx);
+  const b2gB=b2gTotal?bidx.reduce((s,i)=>s+(b2gTotal[i]||0),0):sumI(b2g,bidx);
+  const aT={B2C:sumI(b2c,aidx),B2B:sumI(b2b,aidx),B2G:b2gA};
+  const bT={B2C:sumI(b2c,bidx),B2B:sumI(b2b,bidx),B2G:b2gB};
+  const aG=aT.B2C+aT.B2B+aT.B2G,bG=bT.B2C+bT.B2B+bT.B2G,delta=aG-bG,dp=bG?delta/bG*100:0;
+  const pA=aq==='all'?ay:aq+' '+ay,pB=bq==='all'?by:bq+' '+by;
+  document.getElementById('cmp-rev-content').innerHTML=`
+  <div class="g3" style="margin-bottom:16px">
+    <div class="kpi" style="--c:#5b21b6"><div class="kl">${pA}</div><div class="kv" style="color:#5b21b6">${fmtK(aG)}</div><div class="ks">SAR Total Revenue</div></div>
+    <div class="kpi" style="--c:#94a3b8"><div class="kl">${pB}</div><div class="kv" style="color:#94a3b8">${fmtK(bG)}</div><div class="ks">SAR Total Revenue</div></div>
+    <div class="kpi" style="--c:${delta>=0?'#10b981':'#ef4444'}"><div class="kl">Change</div><div class="kv" style="color:${delta>=0?C.gn:C.rd}">${delta>=0?'+':''}${fmtK(delta)}</div><div class="ks">${dp>=0?'+':''}${dp.toFixed(1)}% vs ${pB}</div></div>
+  </div>
+  <div class="cc"><div class="ct">Revenue Comparison <span class="cs">${pA} vs ${pB}</span></div><div style="height:220px"><canvas id="c-crev"></canvas></div></div>
+  <div class="tw"><table><thead><tr><th>Segment</th><th>${pA}</th><th>${pB}</th><th>Change</th><th>%</th></tr></thead><tbody>
+  ${['B2C','B2B','B2G'].map(s=>{const av=aT[s],bv=bT[s],d=av-bv,dp2=bv?d/bv*100:0;return`<tr class="tot"><td><span class="bdg ${s.toLowerCase()}d">${s}</span></td><td class="pos">${fmt(av)}</td><td>${fmt(bv)}</td><td class="${d>=0?'pos':'neg'}">${d>=0?'+':''}${fmt(d)}</td><td class="${d>=0?'pos':'neg'}">${dp2.toFixed(1)}%</td></tr>`;}).join('')}
+  <tr class="tot"><td>Grand Total</td><td class="pos">${fmt(aG)}</td><td>${fmt(bG)}</td><td class="${delta>=0?'pos':'neg'}">${delta>=0?'+':''}${fmt(delta)}</td><td class="${delta>=0?'pos':'neg'}">${dp.toFixed(1)}%</td></tr>
+  </tbody></table></div>`;
+  dc('crev');CH['crev']=new Chart(document.getElementById('c-crev').getContext('2d'),{
+    type:'bar',data:{labels:['B2C','B2B','B2G'],datasets:[
+      {label:pA,data:[aT.B2C,aT.B2B,b2gA],backgroundColor:'rgba(91,33,182,.7)',borderRadius:4},
+      {label:pB,data:[bT.B2C,bT.B2B,b2gB],backgroundColor:'rgba(148,163,184,.5)',borderRadius:4},
+    ]},options:copts()
+  });
+}
+
+// ============================================================
+// P3: P&L
+// ============================================================
+window._plY='2026';window._plV='monthly';
+async function loadPL(){
+  try{
+    if(!_D) _D=await fetchData('all');
+    const {pl}=_D;
+    const years=[...new Set(pl.dates.map(d=>d.split(' ')[1]).filter(Boolean))].sort();
+    document.getElementById('p3-content').innerHTML=`
+    <div class="fb" style="margin-bottom:14px">
+      <div class="fg"><div class="fl">Year</div><div class="chips" id="pl-yr-chips">
+        ${years.map(y=>`<span class="chip ${y==='2026'?'on':''}" onclick="setPLYear('${y}')">${y}</span>`).join('')}
+      </div></div>
+      <div class="fg"><div class="fl">View</div><div class="chips">
+        <span class="chip on" id="pv-m" onclick="setPLV('monthly')">Monthly</span>
+        <span class="chip" id="pv-q" onclick="setPLV('quarterly')">Quarterly</span>
+        <span class="chip" id="pv-a" onclick="setPLV('annual')">Annual</span>
+      </div></div>
+    </div>
+    <div class="g5" id="pl-kpis"></div>
+    <div class="g2">
+      <div class="cc"><div class="ct">Revenue vs COGS vs Gross Profit <span class="cs" id="pl-c1-lbl">2026</span></div><div style="height:200px"><canvas id="c-pl1"></canvas></div></div>
+      <div class="cc"><div class="ct">Margin Breakdown <span class="cs" id="pl-c2-lbl">2026 YTD</span></div><div style="height:200px"><canvas id="c-pl2"></canvas></div></div>
+    </div>
+    <div class="g2e">
+      <div class="cc"><div class="ct">Net Profit Trend <span class="cs" id="pl-c3-lbl">2026</span></div><div style="height:175px"><canvas id="c-pl3"></canvas></div></div>
+      <div class="cc"><div class="ct">Cost Structure <span class="cs" id="pl-c4-lbl">2026 YTD</span></div><div style="height:175px"><canvas id="c-pl4"></canvas></div></div>
+    </div>
+    <div class="tw" id="plTW"></div>`;
+    renderPLFull();
+  }catch(e){errEl('p3-content','Error: '+e.message);console.error(e);}
+}
+
+function setPLYear(y){window._plY=y;document.querySelectorAll('#pl-yr-chips .chip').forEach(c=>c.classList.toggle('on',c.textContent===y));renderPLFull();}
+function setPLV(v){window._plV=v;['m','q','a'].forEach(x=>document.getElementById('pv-'+x)?.classList.remove('on'));document.getElementById({monthly:'m',quarterly:'q',annual:'a'}[v])?.classList.add('on');renderPLFull();}
+
+function renderPLFull(){
+  if(!_D)return;
+  const {pl}=_D;
+  const yr=window._plY||'2026',v=window._plV||'monthly';
+  const rows=[
+    {label:'Revenue',vals:pl.revenue,cls:'pl-rv'},
+    {label:'Cost of Revenue',vals:pl.cogs,cls:''},
+    {label:'Gross Profit',vals:pl.grossProfit,cls:'pl-gp'},
+    {label:'Salaries',vals:pl.salaries,cls:''},
+    {label:'Marketing',vals:pl.marketing,cls:''},
+    {label:'Other OPEX',vals:pl.otherOpex,cls:''},
+    {label:'EBITDA',vals:pl.ebitda,cls:'pl-eb'},
+    {label:'Other Income',vals:pl.otherIncome,cls:''},
+    {label:'Net Profit / Loss',vals:pl.netProfit,cls:'pl-np'},
+  ];
+  const ixYr=pl.dates.map((d,i)=>d.includes(yr)?i:-1).filter(i=>i>=0);
+  const lYr=ixYr.map(i=>pl.dates[i]);
+  const ytd=vals=>ixYr.reduce((t,i)=>t+(vals[i]||0),0);
+  const kR=ytd(pl.revenue),kC=ytd(pl.cogs),kG=ytd(pl.grossProfit);
+  const kO=ytd(pl.salaries)+ytd(pl.marketing)+ytd(pl.otherOpex),kN=ytd(pl.netProfit);
+  const gm=kR?(kG/kR*100):0,nm=kR?(kN/kR*100):0;
+
+  // KPI cards
+  const kpiEl=document.getElementById('pl-kpis');
+  if(kpiEl)kpiEl.innerHTML=`
+    <div class="kpi" style="--c:#5b21b6"><div class="kl">Revenue</div><div class="kv" style="font-size:1rem">${fmtK(kR)} SAR</div><div class="ks">${yr} YTD</div></div>
+    <div class="kpi" style="--c:#ef4444"><div class="kl">COGS</div><div class="kv" style="font-size:1rem;color:#ef4444">${fmtK(Math.abs(kC))} SAR</div><div class="ks">${kR?(Math.abs(kC)/kR*100).toFixed(1):0}% of Revenue</div></div>
+    <div class="kpi" style="--c:${gm>=0?'#10b981':'#ef4444'}"><div class="kl">Gross Profit</div><div class="kv" style="font-size:1rem;color:${gm>=0?C.gn:C.rd}">${fmtK(kG)} SAR</div><div class="ks">${gm.toFixed(1)}% Gross Margin</div></div>
+    <div class="kpi" style="--c:#f59e0b"><div class="kl">OPEX</div><div class="kv" style="font-size:1rem;color:#f59e0b">${fmtK(Math.abs(kO))} SAR</div><div class="ks">${kR?(Math.abs(kO)/kR*100).toFixed(1):0}% of Revenue</div></div>
+    <div class="kpi" style="--c:${nm>=0?'#10b981':'#ef4444'}"><div class="kl">Net Profit / Loss</div><div class="kv" style="font-size:1rem;color:${nm>=0?C.gn:C.rd}">${fmtK(kN)} SAR</div><div class="ks">${nm.toFixed(1)}% Net Margin</div></div>`;
+
+  ['pl-c1-lbl','pl-c3-lbl'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=yr;});
+  ['pl-c2-lbl','pl-c4-lbl'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=yr+' YTD';});
+
+  dc('pl1');const pl1El=document.getElementById('c-pl1');
+  if(pl1El)CH['pl1']=new Chart(pl1El.getContext('2d'),{type:'bar',data:{labels:lYr,datasets:[
+    {label:'Revenue',data:ixYr.map(i=>pl.revenue[i]),backgroundColor:'rgba(91,33,182,.5)',borderRadius:4,order:2},
+    {label:'COGS',data:ixYr.map(i=>Math.abs(pl.cogs[i]||0)),backgroundColor:'rgba(239,68,68,.4)',borderRadius:4,order:2},
+    {label:'Gross Profit',data:ixYr.map(i=>pl.grossProfit[i]),type:'line',borderColor:C.gn,borderWidth:2.5,pointRadius:3,tension:.3,fill:false,order:1},
+  ]},options:copts()});
+
+  dc('pl2');const pl2El=document.getElementById('c-pl2');
+  if(pl2El)CH['pl2']=new Chart(pl2El.getContext('2d'),{type:'doughnut',data:{labels:['Gross Profit','COGS','OPEX'],datasets:[{data:[Math.max(0,kG),Math.abs(kC),Math.abs(kO)],backgroundColor:[C.gn,'#ef4444',C.am],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{position:'bottom',labels:{color:C.tc,font:{size:11},padding:8}}}}});
+
+  dc('pl3');const pl3El=document.getElementById('c-pl3');
+  if(pl3El)CH['pl3']=new Chart(pl3El.getContext('2d'),{type:'line',data:{labels:lYr,datasets:[
+    {label:'Net Profit',data:ixYr.map(i=>pl.netProfit[i]),borderColor:C.gn,backgroundColor:'rgba(16,185,129,.1)',borderWidth:2.5,pointRadius:3,tension:.3,fill:true},
+    {label:'Gross Profit',data:ixYr.map(i=>pl.grossProfit[i]),borderColor:C.p2,borderDash:[4,4],borderWidth:2,pointRadius:2,tension:.3,fill:false},
+  ]},options:copts()});
+
+  const ov={Salaries:Math.abs(ytd(pl.salaries)),Marketing:Math.abs(ytd(pl.marketing)),'Other':Math.abs(ytd(pl.otherOpex))};
+  dc('pl4');const pl4El=document.getElementById('c-pl4');
+  if(pl4El)CH['pl4']=new Chart(pl4El.getContext('2d'),{type:'doughnut',data:{labels:Object.keys(ov),datasets:[{data:Object.values(ov),backgroundColor:[C.pu,C.bl,C.am],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{position:'bottom',labels:{color:C.tc,font:{size:11},padding:8}}}}});
+
+  // Table
+  let baseIdx=yr==='all'?pl.dates.map((_,i)=>i):ixYr;
+  let groups=[];
+  if(v==='monthly'){groups=baseIdx.map(i=>({label:pl.dates[i],idxs:[i]}));}
+  else if(v==='quarterly'){const qm={};baseIdx.forEach(i=>{const [mon,yr2]=pl.dates[i].split(' ');const q=`Q${Math.ceil((MN.indexOf(mon)+1)/3)} ${yr2}`;if(!qm[q])qm[q]=[];qm[q].push(i);});groups=Object.entries(qm).map(([label,idxs])=>({label,idxs}));}
+  else{const ym={};baseIdx.forEach(i=>{const y=pl.dates[i].split(' ')[1]||'';if(!ym[y])ym[y]=[];ym[y].push(i);});groups=Object.entries(ym).map(([label,idxs])=>({label,idxs}));}
+
+  let h=`<table><thead><tr><th>Line Item</th>${groups.map(g=>`<th>${g.label}</th>`).join('')}</tr></thead><tbody>`;
+  rows.forEach(r=>{h+=`<tr class="${r.cls}"><td>${r.label}</td>`;groups.forEach(g=>{const vv=g.idxs.reduce((t,i)=>t+(r.vals[i]||0),0);h+=`<td class="${vv>0?'pos':vv<0?'neg':''}">${fmt(vv)}</td>`;});h+='</tr>';});
+  const plTW=document.getElementById('plTW');
+  if(plTW)plTW.innerHTML=h+'</tbody></table>';
+}
+
+// ============================================================
+// P3C: P&L COMPARE
+// ============================================================
+async function loadPLCompare(){
+  try{
+    if(!_D) _D=await fetchData('all');
+    const {pl}=_D;
+    const years=[...new Set(pl.dates.map(d=>d.split(' ')[1]).filter(Boolean))].sort();
+    document.getElementById('p3cc').innerHTML=`
+    <div class="fb" style="margin-bottom:16px">
+      <div class="fg"><div class="fl">Period A — Year</div><select id="cpl-ay" onchange="renderPLCompare()">${years.map(y=>`<option value="${y}"${y==='2026'?' selected':''}>${y}</option>`).join('')}</select></div>
+      <div style="display:flex;align-items:center;font-size:1.5rem;color:var(--mu);align-self:flex-end;padding-bottom:4px">vs</div>
+      <div class="fg"><div class="fl">Period B — Year</div><select id="cpl-by" onchange="renderPLCompare()">${years.map(y=>`<option value="${y}"${y==='2025'?' selected':''}>${y}</option>`).join('')}</select></div>
+    </div>
+    <div id="cpl-content"><div class="ld"><span class="spin"></span>Loading...</div></div>`;
+    renderPLCompare();
+  }catch(e){errEl('p3cc','Error: '+e.message);}
+}
+
+function renderPLCompare(){
+  if(!_D)return;
+  const {pl}=_D;
+  const rows=[
+    {label:'Revenue',vals:pl.revenue,cls:'pl-rv'},
+    {label:'Cost of Revenue',vals:pl.cogs,cls:''},
+    {label:'Gross Profit',vals:pl.grossProfit,cls:'pl-gp'},
+    {label:'Salaries',vals:pl.salaries,cls:''},
+    {label:'Marketing',vals:pl.marketing,cls:''},
+    {label:'Other OPEX',vals:pl.otherOpex,cls:''},
+    {label:'EBITDA',vals:pl.ebitda,cls:'pl-eb'},
+    {label:'Net Profit / Loss',vals:pl.netProfit,cls:'pl-np'},
+  ];
+  const ay=document.getElementById('cpl-ay')?.value||'2026';
+  const by=document.getElementById('cpl-by')?.value||'2025';
+  const aidx=pl.dates.map((d,i)=>d.includes(ay)?i:-1).filter(i=>i>=0);
+  const bidx=pl.dates.map((d,i)=>d.includes(by)?i:-1).filter(i=>i>=0);
+  const sumI=(vals,idxs)=>idxs.reduce((t,i)=>t+(vals[i]||0),0);
+  let html=`<div class="tw"><table><thead><tr><th>Line Item</th><th>${ay}</th><th>${by}</th><th>Change</th><th>%</th></tr></thead><tbody>`;
+  rows.forEach(r=>{const av=sumI(r.vals,aidx),bv=sumI(r.vals,bidx),d=av-bv,dp=bv?(d/bv*100):0;html+=`<tr class="${r.cls}"><td>${r.label}</td><td class="${av>0?'pos':av<0?'neg':''}">${fmt(av)}</td><td>${fmt(bv)}</td><td class="${d>=0?'pos':'neg'}">${d>=0?'+':''}${fmt(d)}</td><td class="${d>=0?'pos':'neg'}">${dp.toFixed(1)}%</td></tr>`;});
+  html+='</tbody></table></div>';
+  html+=`<div class="cc"><div class="ct">P&L Comparison <span class="cs">${ay} vs ${by}</span></div><div style="height:280px"><canvas id="c-cpl"></canvas></div></div>`;
+  document.getElementById('cpl-content').innerHTML=html;
+  dc('cpl');CH['cpl']=new Chart(document.getElementById('c-cpl').getContext('2d'),{
+    type:'bar',data:{labels:rows.map(r=>r.label),datasets:[
+      {label:ay,data:rows.map(r=>sumI(r.vals,aidx)),backgroundColor:'rgba(91,33,182,.7)',borderRadius:4},
+      {label:by,data:rows.map(r=>sumI(r.vals,bidx)),backgroundColor:'rgba(148,163,184,.4)',borderRadius:4},
+    ]},options:copts()
+  });
+}
+
+// ============================================================
+// P4 & P5: from existing CSV (unchanged)
+// ============================================================
+const SID='1EBs2pDABCo5erIJ-DL2SOrhcNkp2ZyovRoAxNDw0GhM';
+const BASE=`https://docs.google.com/spreadsheets/d/${SID}/gviz/tq?tqx=out:csv&sheet=`;
+function parseCSV(text){const rows=[];for(const line of text.split('\n')){const cells=[];let cell='',inQ=false;for(let i=0;i<line.length;i++){const c=line[i];if(c==='"'){if(inQ&&line[i+1]==='"'){cell+='"';i++;}else inQ=!inQ;}else if(c===','&&!inQ){cells.push(cell.trim());cell='';}else cell+=c;}cells.push(cell.trim());rows.push(cells);}return rows;}
+async function gcsv(sheet){const r=await fetch(BASE+encodeURIComponent(sheet));if(!r.ok)throw new Error('HTTP '+r.status);return parseCSV(await r.text());}
+const pn=v=>parseFloat(String(v||'0').replace(/,/g,'').replace(/^"|"$/g,''))||0;
+function parseD(raw){if(!raw)return null;const s=String(raw).replace(/^"|"$/g,'').trim();if(!s||s==='null')return null;if(/^[A-Za-z]{3}\s+\d{4}$/.test(s))return s;const iso=s.match(/^(\d{4})-(\d{2})-\d{2}/);if(iso)return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][parseInt(iso[2])-1]+' '+iso[1];return null;}
+const pcC2=p=>p>=50?C.gn:p>=20?C.am:C.rd;
+
+async function loadRevTarget(){
+  try{
+    const raw=await gcsv('Rev YTD Vs Target 2026');
+    const streams=raw.slice(1).map(r=>({name:String(r[0]||'').replace(/^"|"$/g,'').trim(),target:pn(r[1]),actual:pn(r[2]),pct:pn(r[1])>0?(pn(r[2])/pn(r[1])*100):0})).filter(r=>r.name&&r.name!='null'&&r.name!='Rev Stream');
+    const grand=streams.find(s=>s.name==='2026 Target');
+    const totals=streams.filter(s=>['Total B2C','Total B2B','B2G'].includes(s.name));
+    const details=streams.filter(s=>!['Total B2C','Total B2B','B2G','2026 Target'].includes(s.name));
+    document.getElementById('p4c').innerHTML=`
+    ${grand?`<div class="cc"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><span style="font-size:.88rem;font-weight:700">2026 — YTD vs Annual Target</span><span style="font-size:.78rem;font-family:'JetBrains Mono',monospace;color:var(--mu)"><strong>${fmtK(grand.actual)}</strong> YTD / ${fmtK(grand.target)} Target · <span style="color:${pcC2(grand.pct)};font-weight:700">${grand.pct.toFixed(1)}%</span></span></div><div class="pb" style="height:14px"><div class="pf" style="width:${Math.min(100,grand.pct).toFixed(2)}%;background:linear-gradient(90deg,#5b21b6,#10b981)"></div></div></div>`:''}
+    <div class="g3">${totals.map(s=>`<div class="kpi" style="--c:${pcC2(s.pct)}"><div class="kl">${s.name}</div><div class="kv" style="color:${pcC2(s.pct)}">${fmtK(s.actual)}</div><div class="ks">Target: ${fmtK(s.target)} · <strong>${s.pct.toFixed(1)}%</strong></div></div>`).join('')}</div>
+    <div class="cc"><div class="ct">Progress by Stream</div><div style="padding-top:4px">${details.map(s=>{const p=Math.min(100,s.pct);return`<div class="pi"><div class="ph"><span class="pn">${s.name}</span><span class="pv">${fmtK(s.actual)} / ${fmtK(s.target)} · <strong style="color:${pcC2(s.pct)}">${s.pct.toFixed(1)}%</strong></span></div><div class="pb"><div class="pf" style="width:${p.toFixed(2)}%;background:${pcC2(s.pct)}"></div></div></div>`;}).join('')}</div></div>`;
+  }catch(e){errEl('p4c','Error: '+e.message);}
+}
+
+async function loadBudget(){
+  try{
+    const raw=await gcsv('Actual spend Vs Budget 2026');
+    const rawMonths=raw[0].slice(1).map(h=>String(h).replace(/^"|"$/g,'').trim());
+    const months=rawMonths.map(h=>h.replace('206','2026'));
+    const allR=raw.slice(1).map(r=>({dept:String(r[0]||'').replace(/^"|"$/g,'').trim(),vals:months.map((_,i)=>pn(r[1+i]))})).filter(r=>r.dept);
+    let sp=allR.findIndex((r,i)=>i>3&&(r.dept==='Dept'||r.dept===''));if(sp<0)sp=11;
+    const bR=allR.slice(0,sp).filter(r=>r.dept!=='Total');
+    const aR=allR.slice(sp+1).filter(r=>r.dept!=='Total');
+    const depts=bR.map(r=>r.dept);
+    const actIdx=months.map((m,i)=>aR.some(r=>r.vals[i]>0)||bR.some(r=>r.vals[i]>0)?i:-1).filter(i=>i>=0);
+    document.getElementById('p5c').innerHTML=`
+    <div class="tw"><table><thead><tr><th>Department</th>${actIdx.map(mi=>`<th>${months[mi]} Budget</th><th>Actual</th><th>Variance</th>`).join('')}</tr></thead>
+    <tbody>${depts.map(d=>{const br=bR.find(r=>r.dept===d);const ar=aR.find(r=>r.dept===d);if(!br)return'';return`<tr><td>${d}</td>${actIdx.map(mi=>{const b=br.vals[mi]||0,a=ar?(ar.vals[mi]||0):0,v=b-a;return`<td>${fmt(b)}</td><td class="${a>0?'pos':''}">${fmt(a)}</td><td class="${v>=0?'pos':'neg'}">${v>=0?'+':''}${fmt(v)}</td>`;}).join('')}</tr>`;}).join('')}</tbody>
+    <tfoot><tr class="tf tot"><td>Total</td>${actIdx.map(mi=>{const tb=bR.reduce((s,r)=>s+(r.vals[mi]||0),0),ta=aR.reduce((s,r)=>s+(r.vals[mi]||0),0),tv=tb-ta;return`<td>${fmt(tb)}</td><td class="${ta>0?'pos':''}">${fmt(ta)}</td><td class="${tv>=0?'pos':'neg'}">${tv>=0?'+':''}${fmt(tv)}</td>`;}).join('')}</tr></tfoot>
+    </table></div>`;
+  }catch(e){errEl('p5c','Error: '+e.message);}
+}
+
+loadDashboard();
+</script>
+</body>
+</html>
