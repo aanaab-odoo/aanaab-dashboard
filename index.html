@@ -427,6 +427,101 @@ function renderRevCompare(){
     ]},options:copts()});
 }
 
+
+// ============================================================
+// P3: P&L
+// ============================================================
+window._plY='2026';window._plV='monthly';
+async function loadPL(){
+  try{
+    if(!_D) _D=await fetchData('all');
+    const {pl}=_D;
+    const years=[...new Set(pl.dates.map(d=>d.split(' ')[1]).filter(Boolean))].sort();
+    document.getElementById('p3-content').innerHTML=`
+    <div class="fb" style="margin-bottom:14px">
+      <div class="fg"><div class="fl">Year</div><div class="chips" id="pl-yr-chips">
+        ${years.map(y=>`<span class="chip ${y==='2026'?'on':''}" onclick="setPLYear('${y}')">${y}</span>`).join('')}
+      </div></div>
+      <div class="fg"><div class="fl">View</div><div class="chips">
+        <span class="chip on" id="pv-m" onclick="setPLV('monthly')">Monthly</span>
+        <span class="chip" id="pv-q" onclick="setPLV('quarterly')">Quarterly</span>
+        <span class="chip" id="pv-a" onclick="setPLV('annual')">Annual</span>
+      </div></div>
+    </div>
+    <div class="g5" id="pl-kpis"></div>
+    <div class="g2">
+      <div class="cc"><div class="ct">Revenue vs COGS vs Gross Profit <span class="cs" id="pl-c1-lbl">2026</span></div><div style="height:200px"><canvas id="c-pl1"></canvas></div></div>
+      <div class="cc"><div class="ct">Margin Breakdown <span class="cs" id="pl-c2-lbl">2026 YTD</span></div><div style="height:200px"><canvas id="c-pl2"></canvas></div></div>
+    </div>
+    <div class="g2e">
+      <div class="cc"><div class="ct">Net Profit Trend <span class="cs" id="pl-c3-lbl">2026</span></div><div style="height:175px"><canvas id="c-pl3"></canvas></div></div>
+      <div class="cc"><div class="ct">Cost Structure <span class="cs" id="pl-c4-lbl">2026 YTD</span></div><div style="height:175px"><canvas id="c-pl4"></canvas></div></div>
+    </div>
+    <div class="tw" id="plTW"></div>`;
+    renderPLFull();
+  }catch(e){errEl('p3-content','Error: '+e.message);console.error(e);}
+}
+
+function setPLYear(y){window._plY=y;document.querySelectorAll('#pl-yr-chips .chip').forEach(c=>c.classList.toggle('on',c.textContent===y));renderPLFull();}
+function setPLV(v){window._plV=v;['m','q','a'].forEach(x=>document.getElementById('pv-'+x)?.classList.remove('on'));document.getElementById({monthly:'m',quarterly:'q',annual:'a'}[v])?.classList.add('on');renderPLFull();}
+
+function renderPLFull(){
+  if(!_D)return;
+  const {pl}=_D;
+  const yr=window._plY||'2026',v=window._plV||'monthly';
+  const rows=[
+    {label:'Revenue',vals:pl.revenue,cls:'pl-rv'},
+    {label:'Cost of Revenue',vals:pl.cogs,cls:''},
+    {label:'Gross Profit',vals:pl.grossProfit,cls:'pl-gp'},
+    {label:'Salaries',vals:pl.salaries,cls:''},
+    {label:'Marketing',vals:pl.marketing,cls:''},
+    {label:'Other OPEX',vals:pl.otherOpex,cls:''},
+    {label:'EBITDA',vals:pl.ebitda,cls:'pl-eb'},
+    {label:'Other Income',vals:pl.otherIncome,cls:''},
+    {label:'Net Profit / Loss',vals:pl.netProfit,cls:'pl-np'},
+  ];
+  const ixYr=pl.dates.map((d,i)=>d.includes(yr)?i:-1).filter(i=>i>=0);
+  const lYr=ixYr.map(i=>pl.dates[i]);
+  const ytd=vals=>ixYr.reduce((t,i)=>t+(vals[i]||0),0);
+  const kR=ytd(pl.revenue),kC=ytd(pl.cogs),kG=ytd(pl.grossProfit);
+  const kO=ytd(pl.salaries)+ytd(pl.marketing)+ytd(pl.otherOpex),kN=ytd(pl.netProfit);
+  const gm=kR?(kG/kR*100):0,nm=kR?(kN/kR*100):0;
+  const kpiEl=document.getElementById('pl-kpis');
+  if(kpiEl)kpiEl.innerHTML=`
+    <div class="kpi" style="--c:#5b21b6"><div class="kl">Revenue</div><div class="kv" style="font-size:1rem">${fmtK(kR)} SAR</div><div class="ks">${yr} YTD</div></div>
+    <div class="kpi" style="--c:#ef4444"><div class="kl">COGS</div><div class="kv" style="font-size:1rem;color:#ef4444">${fmtK(Math.abs(kC))} SAR</div><div class="ks">${kR?(Math.abs(kC)/kR*100).toFixed(1):0}% of Revenue</div></div>
+    <div class="kpi" style="--c:${gm>=0?'#10b981':'#ef4444'}"><div class="kl">Gross Profit</div><div class="kv" style="font-size:1rem;color:${gm>=0?C.gn:C.rd}">${fmtK(kG)} SAR</div><div class="ks">${gm.toFixed(1)}% Gross Margin</div></div>
+    <div class="kpi" style="--c:#f59e0b"><div class="kl">OPEX</div><div class="kv" style="font-size:1rem;color:#f59e0b">${fmtK(Math.abs(kO))} SAR</div><div class="ks">${kR?(Math.abs(kO)/kR*100).toFixed(1):0}% of Revenue</div></div>
+    <div class="kpi" style="--c:${nm>=0?'#10b981':'#ef4444'}"><div class="kl">Net Profit / Loss</div><div class="kv" style="font-size:1rem;color:${nm>=0?C.gn:C.rd}">${fmtK(kN)} SAR</div><div class="ks">${nm.toFixed(1)}% Net Margin</div></div>`;
+  ['pl-c1-lbl','pl-c3-lbl'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=yr;});
+  ['pl-c2-lbl','pl-c4-lbl'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=yr+' YTD';});
+  dc('pl1');const pl1El=document.getElementById('c-pl1');
+  if(pl1El)CH['pl1']=new Chart(pl1El.getContext('2d'),{type:'bar',data:{labels:lYr,datasets:[
+    {label:'Revenue',data:ixYr.map(i=>pl.revenue[i]),backgroundColor:'rgba(91,33,182,.5)',borderRadius:4,order:2},
+    {label:'COGS',data:ixYr.map(i=>Math.abs(pl.cogs[i]||0)),backgroundColor:'rgba(239,68,68,.4)',borderRadius:4,order:2},
+    {label:'Gross Profit',data:ixYr.map(i=>pl.grossProfit[i]),type:'line',borderColor:C.gn,borderWidth:2.5,pointRadius:3,tension:.3,fill:false,order:1},
+  ]},options:copts()});
+  dc('pl2');const pl2El=document.getElementById('c-pl2');
+  if(pl2El)CH['pl2']=new Chart(pl2El.getContext('2d'),{type:'doughnut',data:{labels:['Gross Profit','COGS','OPEX'],datasets:[{data:[Math.max(0,kG),Math.abs(kC),Math.abs(kO)],backgroundColor:[C.gn,'#ef4444',C.am],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{position:'bottom',labels:{color:C.tc,font:{size:11},padding:8}}}}});
+  dc('pl3');const pl3El=document.getElementById('c-pl3');
+  if(pl3El)CH['pl3']=new Chart(pl3El.getContext('2d'),{type:'line',data:{labels:lYr,datasets:[
+    {label:'Net Profit',data:ixYr.map(i=>pl.netProfit[i]),borderColor:C.gn,backgroundColor:'rgba(16,185,129,.1)',borderWidth:2.5,pointRadius:3,tension:.3,fill:true},
+    {label:'Gross Profit',data:ixYr.map(i=>pl.grossProfit[i]),borderColor:C.p2,borderDash:[4,4],borderWidth:2,pointRadius:2,tension:.3,fill:false},
+  ]},options:copts()});
+  const ov={Salaries:Math.abs(ytd(pl.salaries)),Marketing:Math.abs(ytd(pl.marketing)),'Other':Math.abs(ytd(pl.otherOpex))};
+  dc('pl4');const pl4El=document.getElementById('c-pl4');
+  if(pl4El)CH['pl4']=new Chart(pl4El.getContext('2d'),{type:'doughnut',data:{labels:Object.keys(ov),datasets:[{data:Object.values(ov),backgroundColor:[C.pu,C.bl,C.am],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{position:'bottom',labels:{color:C.tc,font:{size:11},padding:8}}}}});
+  let baseIdx=yr==='all'?pl.dates.map((_,i)=>i):ixYr;
+  let groups=[];
+  if(v==='monthly'){groups=baseIdx.map(i=>({label:pl.dates[i],idxs:[i]}));}
+  else if(v==='quarterly'){const qm={};baseIdx.forEach(i=>{const [mon,yr2]=pl.dates[i].split(' ');const q=`Q${Math.ceil((MN.indexOf(mon)+1)/3)} ${yr2}`;if(!qm[q])qm[q]=[];qm[q].push(i);});groups=Object.entries(qm).map(([label,idxs])=>({label,idxs}));}
+  else{const ym={};baseIdx.forEach(i=>{const y=pl.dates[i].split(' ')[1]||'';if(!ym[y])ym[y]=[];ym[y].push(i);});groups=Object.entries(ym).map(([label,idxs])=>({label,idxs}));}
+  let h=`<table><thead><tr><th>Line Item</th>${groups.map(g=>`<th>${g.label}</th>`).join('')}</tr></thead><tbody>`;
+  rows.forEach(r=>{h+=`<tr class="${r.cls}"><td>${r.label}</td>`;groups.forEach(g=>{const vv=g.idxs.reduce((t,i)=>t+(r.vals[i]||0),0);h+=`<td class="${vv>0?'pos':vv<0?'neg':''}">${fmt(vv)}</td>`;});h+='</tr>';});
+  const plTW=document.getElementById('plTW');
+  if(plTW)plTW.innerHTML=h+'</tbody></table>';
+}
+
 async function loadPLCompare(){
   try{
     if(!_D) _D=await fetchData('all');
