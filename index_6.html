@@ -131,13 +131,13 @@ select{background:var(--s2);border:1.5px solid var(--bd2);color:var(--tx);paddin
 </div>
 
 <!-- P2: REVENUE -->
-<div class="page" id="p2"><div class="pt">Revenue Analysis</div><div class="ps">All years · Revenue stream analysis</div><div id="p2c"><div class="ld"><span class="spin"></span>Loading...</div></div></div>
+<div class="page" id="p2"><div class="pt">Revenue Analysis</div><div class="ps">All years · Revenue stream analysis</div><div id="p2-content"><div class="ld"><span class="spin"></span>Loading...</div></div></div>
 
 <!-- P2C: REV COMPARE -->
 <div class="page" id="p2c"><div class="pt">Revenue Comparison</div><div class="ps">Compare two periods side by side</div><div id="p2cc"><div class="ld"><span class="spin"></span>Loading...</div></div></div>
 
 <!-- P3: P&L -->
-<div class="page" id="p3"><div class="pt">P&L Monthly</div><div class="ps">P&L sheet · all months 2019→2026</div><div id="p3c"><div class="ld"><span class="spin"></span>Loading...</div></div></div>
+<div class="page" id="p3"><div class="pt">P&L Monthly</div><div class="ps">P&L sheet · all months 2019→2026</div><div id="p3-content"><div class="ld"><span class="spin"></span>Loading...</div></div></div>
 
 <!-- P3C: P&L COMPARE -->
 <div class="page" id="p3c"><div class="pt">P&L Comparison</div><div class="ps">Compare two years side by side</div><div id="p3cc"><div class="ld"><span class="spin"></span>Loading...</div></div></div>
@@ -250,7 +250,7 @@ async function loadRevenue(){
   try{
     if(!_D) _D=await fetchData('all');
     renderRevenue();
-  }catch(e){errEl('p2c','Error: '+e.message);}
+  }catch(e){errEl('p2-content','Error: '+e.message);}
 }
 
 function getRevIdx(dates,yr,q){
@@ -293,7 +293,7 @@ function renderRevenue(){
   const totKPI=ytdKPI.B2C+ytdKPI.B2B+ytdKPI.B2G;
   const SC={B2C:C.b2c,B2B:C.b2b,B2G:C.b2g};
 
-  document.getElementById('p2c').innerHTML=`
+  document.getElementById('p2-content').innerHTML=`
   <div class="fb">
     <div class="fg"><div class="fl">Segment</div><div class="chips">
       <span class="chip ${st.seg==='all'?'on':''}" onclick="setRF('seg','all')">All</span>
@@ -322,7 +322,7 @@ function renderRevenue(){
   <div class="tw"><table><thead><tr><th>Segment</th><th>Product</th>${dispL.map(m=>`<th>${m}</th>`).join('')}<th>Total</th></tr></thead><tbody>
   ${[...fp.B2C,...fp.B2B,...fp.B2G].sort((a,b)=>sumIdx([b],ix26)-sumIdx([a],ix26)).map(p=>{
     const rt=sumIdx([p],dispIdx);
-    return`<tr><td><span class="bdg ${p.seg.toLowerCase()}d">${p.seg}</span> ${p.name}</td><td style="display:none"></td>${dispIdx.map(i=>{const v=p.vals[i]||0;return`<td class="${v>0?'pos':''}}">${v>0?fmtK(v):'—'}</td>`;}).join('')}<td class="pos" style="font-weight:700">${fmtK(rt)}</td></tr>`;
+    return`<tr><td><span class="bdg ${(p.seg||'b2g').toLowerCase()}d">${p.seg||''}</span> ${p.name}</td><td style="display:none"></td>${dispIdx.map(i=>{const v=p.vals[i]||0;return`<td class="${v>0?'pos':''}}">${v>0?fmtK(v):'—'}</td>`;}).join('')}<td class="pos" style="font-weight:700">${fmtK(rt)}</td></tr>`;
   }).join('')}
   </tbody></table></div>`;
 
@@ -381,142 +381,65 @@ function renderRevCompare(){
   const bT={B2C:sumI(b2c,bidx),B2B:sumI(b2b,bidx),B2G:b2gB};
   const aG=aT.B2C+aT.B2B+aT.B2G,bG=bT.B2C+bT.B2B+bT.B2G,delta=aG-bG,dp=bG?delta/bG*100:0;
   const pA=aq==='all'?ay:aq+' '+ay,pB=bq==='all'?by:bq+' '+by;
+  const segs=['B2C','B2B','B2G'];
+  const topSeg=segs.reduce((best,s)=>aT[s]>aT[best]?s:best,'B2C');
+  const aMonths=aidx.map(i=>sumI(b2c,[i])+sumI(b2b,[i])+(b2gTotal?b2gTotal[i]||0:sumI(b2g,[i])));
+  const bMonths=bidx.map(i=>sumI(b2c,[i])+sumI(b2b,[i])+(b2gTotal?b2gTotal[i]||0:sumI(b2g,[i])));
+  const monthLabels=MN.slice(0,Math.max(aMonths.length,bMonths.length));
   document.getElementById('cmp-rev-content').innerHTML=`
-  <div class="g3" style="margin-bottom:16px">
-    <div class="kpi" style="--c:#5b21b6"><div class="kl">${pA}</div><div class="kv" style="color:#5b21b6">${fmtK(aG)}</div><div class="ks">SAR Total Revenue</div></div>
-    <div class="kpi" style="--c:#94a3b8"><div class="kl">${pB}</div><div class="kv" style="color:#94a3b8">${fmtK(bG)}</div><div class="ks">SAR Total Revenue</div></div>
-    <div class="kpi" style="--c:${delta>=0?'#10b981':'#ef4444'}"><div class="kl">Change</div><div class="kv" style="color:${delta>=0?C.gn:C.rd}">${delta>=0?'+':''}${fmtK(delta)}</div><div class="ks">${dp>=0?'+':''}${dp.toFixed(1)}% vs ${pB}</div></div>
+  <div class="g4" style="margin-bottom:16px">
+    <div class="kpi" style="--c:#5b21b6"><div class="kl">${pA} Total</div><div class="kv" style="color:#5b21b6">${fmtK(aG)}</div><div class="ks">SAR Total Revenue</div></div>
+    <div class="kpi" style="--c:#94a3b8"><div class="kl">${pB} Total</div><div class="kv" style="color:#94a3b8">${fmtK(bG)}</div><div class="ks">SAR Total Revenue</div></div>
+    <div class="kpi" style="--c:${delta>=0?'#10b981':'#ef4444'}"><div class="kl">Growth</div><div class="kv" style="color:${delta>=0?C.gn:C.rd}">${delta>=0?'+':''}${fmtK(delta)}</div><div class="ks">${dp>=0?'+':''}${dp.toFixed(1)}% vs ${pB}</div></div>
+    <div class="kpi" style="--c:#7c3aed"><div class="kl">Top Segment (${pA})</div><div class="kv" style="color:#7c3aed">${topSeg}</div><div class="ks">${fmtK(aT[topSeg])} · ${aG>0?(aT[topSeg]/aG*100).toFixed(1):'0'}% of total</div></div>
   </div>
-  <div class="cc"><div class="ct">Revenue Comparison <span class="cs">${pA} vs ${pB}</span></div><div style="height:220px"><canvas id="c-crev"></canvas></div></div>
-  <div class="tw"><table><thead><tr><th>Segment</th><th>${pA}</th><th>${pB}</th><th>Change</th><th>%</th></tr></thead><tbody>
-  ${['B2C','B2B','B2G'].map(s=>{const av=aT[s],bv=bT[s],d=av-bv,dp2=bv?d/bv*100:0;return`<tr class="tot"><td><span class="bdg ${s.toLowerCase()}d">${s}</span></td><td class="pos">${fmt(av)}</td><td>${fmt(bv)}</td><td class="${d>=0?'pos':'neg'}">${d>=0?'+':''}${fmt(d)}</td><td class="${d>=0?'pos':'neg'}">${dp2.toFixed(1)}%</td></tr>`;}).join('')}
-  <tr class="tot"><td>Grand Total</td><td class="pos">${fmt(aG)}</td><td>${fmt(bG)}</td><td class="${delta>=0?'pos':'neg'}">${delta>=0?'+':''}${fmt(delta)}</td><td class="${delta>=0?'pos':'neg'}">${dp.toFixed(1)}%</td></tr>
+  <div class="g3" style="margin-bottom:14px">
+    ${segs.map(s=>{const av=aT[s],bv=bT[s],d=av-bv,dp2=bv?d/bv*100:0,win=av>bv;return`<div class="kpi" style="--c:${win?'#10b981':'#ef4444'}">
+      <div class="kl" style="display:flex;justify-content:space-between">${s} <span style="font-size:.6rem;padding:1px 6px;border-radius:4px;background:${win?'#d1fae5':'#fee2e2'};color:${win?'#065f46':'#dc2626'}">${win?'▲ WIN':'▼ LOSS'}</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px">
+        <div><div style="font-size:.6rem;color:var(--mu)">${pA}</div><div class="kv" style="font-size:1rem;color:#5b21b6">${fmtK(av)}</div></div>
+        <div><div style="font-size:.6rem;color:var(--mu)">${pB}</div><div class="kv" style="font-size:1rem;color:#94a3b8">${fmtK(bv)}</div></div>
+      </div>
+      <div class="ks" style="margin-top:6px;color:${win?C.gn:C.rd}">${d>=0?'+':''}${fmtK(d)} (${dp2>=0?'+':''}${dp2.toFixed(1)}%)</div>
+    </div>`}).join('')}
+  </div>
+  <div class="g2" style="margin-bottom:14px">
+    <div class="cc"><div class="ct">Month-by-Month <span class="cs">${pA} vs ${pB}</span></div><div style="height:220px"><canvas id="c-crev-monthly"></canvas></div></div>
+    <div class="cc"><div class="ct">Segment Mix <span class="cs">${pA}</span></div><div style="height:220px"><canvas id="c-crev-mix"></canvas></div></div>
+  </div>
+  <div class="cc" style="margin-bottom:14px"><div class="ct">Segment Comparison <span class="cs">${pA} vs ${pB}</span></div><div style="height:180px"><canvas id="c-crev"></canvas></div></div>
+  <div class="tw"><table><thead><tr><th>Segment</th><th>${pA}</th><th>${pB}</th><th>Change</th><th>%</th><th>Mix ${pA}</th></tr></thead><tbody>
+  ${segs.map(s=>{const av=aT[s],bv=bT[s],d=av-bv,dp2=bv?d/bv*100:0;return`<tr class="tot"><td><span class="bdg ${s.toLowerCase()}d">${s}</span></td><td class="pos">${fmt(av)}</td><td>${fmt(bv)}</td><td class="${d>=0?'pos':'neg'}">${d>=0?'+':''}${fmt(d)}</td><td class="${d>=0?'pos':'neg'}">${dp2.toFixed(1)}%</td><td>${aG>0?(av/aG*100).toFixed(1):'0'}%</td></tr>`;}).join('')}
+  <tr class="tot"><td>Grand Total</td><td class="pos">${fmt(aG)}</td><td>${fmt(bG)}</td><td class="${delta>=0?'pos':'neg'}">${delta>=0?'+':''}${fmt(delta)}</td><td class="${delta>=0?'pos':'neg'}">${dp.toFixed(1)}%</td><td>100%</td></tr>
   </tbody></table></div>`;
+  dc('crev-monthly');CH['crev-monthly']=new Chart(document.getElementById('c-crev-monthly').getContext('2d'),{
+    type:'bar',data:{labels:monthLabels,datasets:[
+      {label:pA,data:aMonths,backgroundColor:'rgba(91,33,182,.7)',borderRadius:4},
+      {label:pB,data:bMonths,backgroundColor:'rgba(148,163,184,.4)',borderRadius:4},
+    ]},options:copts()});
+  dc('crev-mix');CH['crev-mix']=new Chart(document.getElementById('c-crev-mix').getContext('2d'),{
+    type:'doughnut',data:{labels:segs,datasets:[{data:segs.map(s=>aT[s]),backgroundColor:['rgba(59,130,246,.8)','rgba(16,185,129,.8)','rgba(245,158,11,.8)'],borderWidth:0}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{position:'bottom',labels:{color:C.tc,font:{size:11},padding:8}}}}});
   dc('crev');CH['crev']=new Chart(document.getElementById('c-crev').getContext('2d'),{
-    type:'bar',data:{labels:['B2C','B2B','B2G'],datasets:[
-      {label:pA,data:[aT.B2C,aT.B2B,b2gA],backgroundColor:'rgba(91,33,182,.7)',borderRadius:4},
-      {label:pB,data:[bT.B2C,bT.B2B,b2gB],backgroundColor:'rgba(148,163,184,.5)',borderRadius:4},
-    ]},options:copts()
-  });
+    type:'bar',data:{labels:segs,datasets:[
+      {label:pA,data:segs.map(s=>aT[s]),backgroundColor:'rgba(91,33,182,.7)',borderRadius:4},
+      {label:pB,data:segs.map(s=>bT[s]),backgroundColor:'rgba(148,163,184,.4)',borderRadius:4},
+    ]},options:copts()});
 }
 
-// ============================================================
-// P3: P&L
-// ============================================================
-window._plY='2026';window._plV='monthly';
-async function loadPL(){
-  try{
-    if(!_D) _D=await fetchData('all');
-    const {pl}=_D;
-    const years=[...new Set(pl.dates.map(d=>d.split(' ')[1]).filter(Boolean))].sort();
-    document.getElementById('p3c').innerHTML=`
-    <div class="fb" style="margin-bottom:14px">
-      <div class="fg"><div class="fl">Year</div><div class="chips" id="pl-yr-chips">
-        ${years.map(y=>`<span class="chip ${y==='2026'?'on':''}" onclick="setPLYear('${y}')">${y}</span>`).join('')}
-      </div></div>
-      <div class="fg"><div class="fl">View</div><div class="chips">
-        <span class="chip on" id="pv-m" onclick="setPLV('monthly')">Monthly</span>
-        <span class="chip" id="pv-q" onclick="setPLV('quarterly')">Quarterly</span>
-        <span class="chip" id="pv-a" onclick="setPLV('annual')">Annual</span>
-      </div></div>
-    </div>
-    <div class="g5" id="pl-kpis"></div>
-    <div class="g2">
-      <div class="cc"><div class="ct">Revenue vs COGS vs Gross Profit <span class="cs" id="pl-c1-lbl">2026</span></div><div style="height:200px"><canvas id="c-pl1"></canvas></div></div>
-      <div class="cc"><div class="ct">Margin Breakdown <span class="cs" id="pl-c2-lbl">2026 YTD</span></div><div style="height:200px"><canvas id="c-pl2"></canvas></div></div>
-    </div>
-    <div class="g2e">
-      <div class="cc"><div class="ct">Net Profit Trend <span class="cs" id="pl-c3-lbl">2026</span></div><div style="height:175px"><canvas id="c-pl3"></canvas></div></div>
-      <div class="cc"><div class="ct">Cost Structure <span class="cs" id="pl-c4-lbl">2026 YTD</span></div><div style="height:175px"><canvas id="c-pl4"></canvas></div></div>
-    </div>
-    <div class="tw" id="plTW"></div>`;
-    renderPLFull();
-  }catch(e){errEl('p3c','Error: '+e.message);console.error(e);}
-}
-
-function setPLYear(y){window._plY=y;document.querySelectorAll('#pl-yr-chips .chip').forEach(c=>c.classList.toggle('on',c.textContent===y));renderPLFull();}
-function setPLV(v){window._plV=v;['m','q','a'].forEach(x=>document.getElementById('pv-'+x)?.classList.remove('on'));document.getElementById({monthly:'m',quarterly:'q',annual:'a'}[v])?.classList.add('on');renderPLFull();}
-
-function renderPLFull(){
-  if(!_D)return;
-  const {pl}=_D;
-  const yr=window._plY||'2026',v=window._plV||'monthly';
-  const rows=[
-    {label:'Revenue',vals:pl.revenue,cls:'pl-rv'},
-    {label:'Cost of Revenue',vals:pl.cogs,cls:''},
-    {label:'Gross Profit',vals:pl.grossProfit,cls:'pl-gp'},
-    {label:'Salaries',vals:pl.salaries,cls:''},
-    {label:'Marketing',vals:pl.marketing,cls:''},
-    {label:'Other OPEX',vals:pl.otherOpex,cls:''},
-    {label:'EBITDA',vals:pl.ebitda,cls:'pl-eb'},
-    {label:'Other Income',vals:pl.otherIncome,cls:''},
-    {label:'Net Profit / Loss',vals:pl.netProfit,cls:'pl-np'},
-  ];
-  const ixYr=pl.dates.map((d,i)=>d.includes(yr)?i:-1).filter(i=>i>=0);
-  const lYr=ixYr.map(i=>pl.dates[i]);
-  const ytd=vals=>ixYr.reduce((t,i)=>t+(vals[i]||0),0);
-  const kR=ytd(pl.revenue),kC=ytd(pl.cogs),kG=ytd(pl.grossProfit);
-  const kO=ytd(pl.salaries)+ytd(pl.marketing)+ytd(pl.otherOpex),kN=ytd(pl.netProfit);
-  const gm=kR?(kG/kR*100):0,nm=kR?(kN/kR*100):0;
-
-  // KPI cards
-  const kpiEl=document.getElementById('pl-kpis');
-  if(kpiEl)kpiEl.innerHTML=`
-    <div class="kpi" style="--c:#5b21b6"><div class="kl">Revenue</div><div class="kv" style="font-size:1rem">${fmtK(kR)} SAR</div><div class="ks">${yr} YTD</div></div>
-    <div class="kpi" style="--c:#ef4444"><div class="kl">COGS</div><div class="kv" style="font-size:1rem;color:#ef4444">${fmtK(Math.abs(kC))} SAR</div><div class="ks">${kR?(Math.abs(kC)/kR*100).toFixed(1):0}% of Revenue</div></div>
-    <div class="kpi" style="--c:${gm>=0?'#10b981':'#ef4444'}"><div class="kl">Gross Profit</div><div class="kv" style="font-size:1rem;color:${gm>=0?C.gn:C.rd}">${fmtK(kG)} SAR</div><div class="ks">${gm.toFixed(1)}% Gross Margin</div></div>
-    <div class="kpi" style="--c:#f59e0b"><div class="kl">OPEX</div><div class="kv" style="font-size:1rem;color:#f59e0b">${fmtK(Math.abs(kO))} SAR</div><div class="ks">${kR?(Math.abs(kO)/kR*100).toFixed(1):0}% of Revenue</div></div>
-    <div class="kpi" style="--c:${nm>=0?'#10b981':'#ef4444'}"><div class="kl">Net Profit / Loss</div><div class="kv" style="font-size:1rem;color:${nm>=0?C.gn:C.rd}">${fmtK(kN)} SAR</div><div class="ks">${nm.toFixed(1)}% Net Margin</div></div>`;
-
-  ['pl-c1-lbl','pl-c3-lbl'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=yr;});
-  ['pl-c2-lbl','pl-c4-lbl'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=yr+' YTD';});
-
-  dc('pl1');const pl1El=document.getElementById('c-pl1');
-  if(pl1El)CH['pl1']=new Chart(pl1El.getContext('2d'),{type:'bar',data:{labels:lYr,datasets:[
-    {label:'Revenue',data:ixYr.map(i=>pl.revenue[i]),backgroundColor:'rgba(91,33,182,.5)',borderRadius:4,order:2},
-    {label:'COGS',data:ixYr.map(i=>Math.abs(pl.cogs[i]||0)),backgroundColor:'rgba(239,68,68,.4)',borderRadius:4,order:2},
-    {label:'Gross Profit',data:ixYr.map(i=>pl.grossProfit[i]),type:'line',borderColor:C.gn,borderWidth:2.5,pointRadius:3,tension:.3,fill:false,order:1},
-  ]},options:copts()});
-
-  dc('pl2');const pl2El=document.getElementById('c-pl2');
-  if(pl2El)CH['pl2']=new Chart(pl2El.getContext('2d'),{type:'doughnut',data:{labels:['Gross Profit','COGS','OPEX'],datasets:[{data:[Math.max(0,kG),Math.abs(kC),Math.abs(kO)],backgroundColor:[C.gn,'#ef4444',C.am],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{position:'bottom',labels:{color:C.tc,font:{size:11},padding:8}}}}});
-
-  dc('pl3');const pl3El=document.getElementById('c-pl3');
-  if(pl3El)CH['pl3']=new Chart(pl3El.getContext('2d'),{type:'line',data:{labels:lYr,datasets:[
-    {label:'Net Profit',data:ixYr.map(i=>pl.netProfit[i]),borderColor:C.gn,backgroundColor:'rgba(16,185,129,.1)',borderWidth:2.5,pointRadius:3,tension:.3,fill:true},
-    {label:'Gross Profit',data:ixYr.map(i=>pl.grossProfit[i]),borderColor:C.p2,borderDash:[4,4],borderWidth:2,pointRadius:2,tension:.3,fill:false},
-  ]},options:copts()});
-
-  const ov={Salaries:Math.abs(ytd(pl.salaries)),Marketing:Math.abs(ytd(pl.marketing)),'Other':Math.abs(ytd(pl.otherOpex))};
-  dc('pl4');const pl4El=document.getElementById('c-pl4');
-  if(pl4El)CH['pl4']=new Chart(pl4El.getContext('2d'),{type:'doughnut',data:{labels:Object.keys(ov),datasets:[{data:Object.values(ov),backgroundColor:[C.pu,C.bl,C.am],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{position:'bottom',labels:{color:C.tc,font:{size:11},padding:8}}}}});
-
-  // Table
-  let baseIdx=yr==='all'?pl.dates.map((_,i)=>i):ixYr;
-  let groups=[];
-  if(v==='monthly'){groups=baseIdx.map(i=>({label:pl.dates[i],idxs:[i]}));}
-  else if(v==='quarterly'){const qm={};baseIdx.forEach(i=>{const [mon,yr2]=pl.dates[i].split(' ');const q=`Q${Math.ceil((MN.indexOf(mon)+1)/3)} ${yr2}`;if(!qm[q])qm[q]=[];qm[q].push(i);});groups=Object.entries(qm).map(([label,idxs])=>({label,idxs}));}
-  else{const ym={};baseIdx.forEach(i=>{const y=pl.dates[i].split(' ')[1]||'';if(!ym[y])ym[y]=[];ym[y].push(i);});groups=Object.entries(ym).map(([label,idxs])=>({label,idxs}));}
-
-  let h=`<table><thead><tr><th>Line Item</th>${groups.map(g=>`<th>${g.label}</th>`).join('')}</tr></thead><tbody>`;
-  rows.forEach(r=>{h+=`<tr class="${r.cls}"><td>${r.label}</td>`;groups.forEach(g=>{const vv=g.idxs.reduce((t,i)=>t+(r.vals[i]||0),0);h+=`<td class="${vv>0?'pos':vv<0?'neg':''}">${fmt(vv)}</td>`;});h+='</tr>';});
-  const plTW=document.getElementById('plTW');
-  if(plTW)plTW.innerHTML=h+'</tbody></table>';
-}
-
-// ============================================================
-// P3C: P&L COMPARE
-// ============================================================
 async function loadPLCompare(){
   try{
     if(!_D) _D=await fetchData('all');
     const {pl}=_D;
     const years=[...new Set(pl.dates.map(d=>d.split(' ')[1]).filter(Boolean))].sort();
+    const quarters=['Q1','Q2','Q3','Q4'];
     document.getElementById('p3cc').innerHTML=`
     <div class="fb" style="margin-bottom:16px">
       <div class="fg"><div class="fl">Period A — Year</div><select id="cpl-ay" onchange="renderPLCompare()">${years.map(y=>`<option value="${y}"${y==='2026'?' selected':''}>${y}</option>`).join('')}</select></div>
+      <div class="fg"><div class="fl">Period A — Quarter</div><select id="cpl-aq" onchange="renderPLCompare()"><option value="all">Full Year</option>${quarters.map(q=>`<option>${q}</option>`).join('')}</select></div>
       <div style="display:flex;align-items:center;font-size:1.5rem;color:var(--mu);align-self:flex-end;padding-bottom:4px">vs</div>
       <div class="fg"><div class="fl">Period B — Year</div><select id="cpl-by" onchange="renderPLCompare()">${years.map(y=>`<option value="${y}"${y==='2025'?' selected':''}>${y}</option>`).join('')}</select></div>
+      <div class="fg"><div class="fl">Period B — Quarter</div><select id="cpl-bq" onchange="renderPLCompare()"><option value="all">Full Year</option>${quarters.map(q=>`<option>${q}</option>`).join('')}</select></div>
     </div>
     <div id="cpl-content"><div class="ld"><span class="spin"></span>Loading...</div></div>`;
     renderPLCompare();
@@ -534,24 +457,65 @@ function renderPLCompare(){
     {label:'Marketing',vals:pl.marketing,cls:''},
     {label:'Other OPEX',vals:pl.otherOpex,cls:''},
     {label:'EBITDA',vals:pl.ebitda,cls:'pl-eb'},
+    {label:'Other Income',vals:pl.otherIncome,cls:''},
     {label:'Net Profit / Loss',vals:pl.netProfit,cls:'pl-np'},
   ];
   const ay=document.getElementById('cpl-ay')?.value||'2026';
+  const aqv=document.getElementById('cpl-aq')?.value||'all';
   const by=document.getElementById('cpl-by')?.value||'2025';
-  const aidx=pl.dates.map((d,i)=>d.includes(ay)?i:-1).filter(i=>i>=0);
-  const bidx=pl.dates.map((d,i)=>d.includes(by)?i:-1).filter(i=>i>=0);
+  const bqv=document.getElementById('cpl-bq')?.value||'all';
+  const qM={Q1:['Jan','Feb','Mar'],Q2:['Apr','May','Jun'],Q3:['Jul','Aug','Sep'],Q4:['Oct','Nov','Dec']};
+  const filterIdx=(yr,q)=>pl.dates.map((d,i)=>{const [m,y]=d.split(' ');if(y!==yr)return -1;return q==='all'?i:qM[q]?.includes(m)?i:-1;}).filter(i=>i>=0);
+  const aidx=filterIdx(ay,aqv),bidx=filterIdx(by,bqv);
   const sumI=(vals,idxs)=>idxs.reduce((t,i)=>t+(vals[i]||0),0);
-  let html=`<div class="tw"><table><thead><tr><th>Line Item</th><th>${ay}</th><th>${by}</th><th>Change</th><th>%</th></tr></thead><tbody>`;
+  const pA=aqv==='all'?ay:aqv+' '+ay,pB=bqv==='all'?by:bqv+' '+by;
+  const aRev=sumI(pl.revenue,aidx),bRev=sumI(pl.revenue,bidx);
+  const aGP=sumI(pl.grossProfit,aidx),bGP=sumI(pl.grossProfit,bidx);
+  const aNP=sumI(pl.netProfit,aidx),bNP=sumI(pl.netProfit,bidx);
+  const aGM=aRev?(aGP/aRev*100):0,bGM=bRev?(bGP/bRev*100):0;
+  const aNM=aRev?(aNP/aRev*100):0,bNM=bRev?(bNP/bRev*100):0;
+  const aMonthNP=aidx.map(i=>pl.netProfit[i]||0);
+  const bMonthNP=bidx.map(i=>pl.netProfit[i]||0);
+  let html=`
+  <div class="g4" style="margin-bottom:16px">
+    <div class="kpi" style="--c:#5b21b6"><div class="kl">Revenue</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:4px">
+        <div><div style="font-size:.6rem;color:var(--mu)">${pA}</div><div class="kv" style="font-size:.9rem;color:#5b21b6">${fmtK(aRev)}</div></div>
+        <div><div style="font-size:.6rem;color:var(--mu)">${pB}</div><div class="kv" style="font-size:.9rem;color:#94a3b8">${fmtK(bRev)}</div></div>
+      </div><div class="ks" style="color:${aRev>=bRev?C.gn:C.rd}">${aRev>=bRev?'▲':'▼'} ${bRev?((aRev-bRev)/bRev*100).toFixed(1):'—'}%</div></div>
+    <div class="kpi" style="--c:${aGP>=0?'#10b981':'#ef4444'}"><div class="kl">Gross Profit</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:4px">
+        <div><div style="font-size:.6rem;color:var(--mu)">${pA}</div><div class="kv" style="font-size:.9rem;color:${aGP>=0?C.gn:C.rd}">${fmtK(aGP)}</div></div>
+        <div><div style="font-size:.6rem;color:var(--mu)">${pB}</div><div class="kv" style="font-size:.9rem;color:#94a3b8">${fmtK(bGP)}</div></div>
+      </div><div class="ks" style="color:${aGP>=bGP?C.gn:C.rd}">Margin: ${aGM.toFixed(1)}% vs ${bGM.toFixed(1)}%</div></div>
+    <div class="kpi" style="--c:${aNP>=0?'#10b981':'#ef4444'}"><div class="kl">Net Profit</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:4px">
+        <div><div style="font-size:.6rem;color:var(--mu)">${pA}</div><div class="kv" style="font-size:.9rem;color:${aNP>=0?C.gn:C.rd}">${fmtK(aNP)}</div></div>
+        <div><div style="font-size:.6rem;color:var(--mu)">${pB}</div><div class="kv" style="font-size:.9rem;color:#94a3b8">${fmtK(bNP)}</div></div>
+      </div><div class="ks" style="color:${aNP>=bNP?C.gn:C.rd}">Margin: ${aNM.toFixed(1)}% vs ${bNM.toFixed(1)}%</div></div>
+    <div class="kpi" style="--c:#7c3aed"><div class="kl">Margin Change</div>
+      <div class="kv" style="font-size:.95rem;color:${aGM>=bGM?C.gn:C.rd}">${(aGM-bGM)>=0?'+':''}${(aGM-bGM).toFixed(1)}% GM</div>
+      <div class="kv" style="font-size:.95rem;color:${aNM>=bNM?C.gn:C.rd};margin-top:6px">${(aNM-bNM)>=0?'+':''}${(aNM-bNM).toFixed(1)}% NM</div>
+    </div>
+  </div>
+  <div class="g2" style="margin-bottom:14px">
+    <div class="cc"><div class="ct">Net Profit Trend <span class="cs">${pA} vs ${pB}</span></div><div style="height:200px"><canvas id="c-cpl-monthly"></canvas></div></div>
+    <div class="cc"><div class="ct">P&L Bar Comparison <span class="cs">${pA} vs ${pB}</span></div><div style="height:200px"><canvas id="c-cpl"></canvas></div></div>
+  </div>
+  <div class="tw"><table><thead><tr><th>Line Item</th><th>${pA}</th><th>${pB}</th><th>Change</th><th>%</th></tr></thead><tbody>`;
   rows.forEach(r=>{const av=sumI(r.vals,aidx),bv=sumI(r.vals,bidx),d=av-bv,dp=bv?(d/bv*100):0;html+=`<tr class="${r.cls}"><td>${r.label}</td><td class="${av>0?'pos':av<0?'neg':''}">${fmt(av)}</td><td>${fmt(bv)}</td><td class="${d>=0?'pos':'neg'}">${d>=0?'+':''}${fmt(d)}</td><td class="${d>=0?'pos':'neg'}">${dp.toFixed(1)}%</td></tr>`;});
   html+='</tbody></table></div>';
-  html+=`<div class="cc"><div class="ct">P&L Comparison <span class="cs">${ay} vs ${by}</span></div><div style="height:280px"><canvas id="c-cpl"></canvas></div></div>`;
   document.getElementById('cpl-content').innerHTML=html;
+  dc('cpl-monthly');CH['cpl-monthly']=new Chart(document.getElementById('c-cpl-monthly').getContext('2d'),{
+    type:'line',data:{labels:MN.slice(0,Math.max(aMonthNP.length,bMonthNP.length)),datasets:[
+      {label:pA,data:aMonthNP,borderColor:C.pu,backgroundColor:'rgba(91,33,182,.1)',borderWidth:2.5,pointRadius:3,tension:.3,fill:true},
+      {label:pB,data:bMonthNP,borderColor:'#94a3b8',backgroundColor:'rgba(148,163,184,.1)',borderWidth:2,pointRadius:3,tension:.3,fill:true},
+    ]},options:copts()});
   dc('cpl');CH['cpl']=new Chart(document.getElementById('c-cpl').getContext('2d'),{
     type:'bar',data:{labels:rows.map(r=>r.label),datasets:[
-      {label:ay,data:rows.map(r=>sumI(r.vals,aidx)),backgroundColor:'rgba(91,33,182,.7)',borderRadius:4},
-      {label:by,data:rows.map(r=>sumI(r.vals,bidx)),backgroundColor:'rgba(148,163,184,.4)',borderRadius:4},
-    ]},options:copts()
-  });
+      {label:pA,data:rows.map(r=>sumI(r.vals,aidx)),backgroundColor:'rgba(91,33,182,.7)',borderRadius:4},
+      {label:pB,data:rows.map(r=>sumI(r.vals,bidx)),backgroundColor:'rgba(148,163,184,.4)',borderRadius:4},
+    ]},options:copts()});
 }
 
 // ============================================================
@@ -572,13 +536,46 @@ async function loadRevTarget(){
     const grand=streams.find(s=>s.name==='2026 Target');
     const totals=streams.filter(s=>['Total B2C','Total B2B','B2G'].includes(s.name));
     const details=streams.filter(s=>!['Total B2C','Total B2B','B2G','2026 Target'].includes(s.name));
+    const remaining=grand?grand.target-grand.actual:0;
+    const monthsElapsed=4;
+    const runRate=grand?grand.actual/monthsElapsed:0;
     document.getElementById('p4c').innerHTML=`
-    ${grand?`<div class="cc"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><span style="font-size:.88rem;font-weight:700">2026 — YTD vs Annual Target</span><span style="font-size:.78rem;font-family:'JetBrains Mono',monospace;color:var(--mu)"><strong>${fmtK(grand.actual)}</strong> YTD / ${fmtK(grand.target)} Target · <span style="color:${pcC2(grand.pct)};font-weight:700">${grand.pct.toFixed(1)}%</span></span></div><div class="pb" style="height:14px"><div class="pf" style="width:${Math.min(100,grand.pct).toFixed(2)}%;background:linear-gradient(90deg,#5b21b6,#10b981)"></div></div></div>`:''}
-    <div class="g3">${totals.map(s=>`<div class="kpi" style="--c:${pcC2(s.pct)}"><div class="kl">${s.name}</div><div class="kv" style="color:${pcC2(s.pct)}">${fmtK(s.actual)}</div><div class="ks">Target: ${fmtK(s.target)} · <strong>${s.pct.toFixed(1)}%</strong></div></div>`).join('')}</div>
-    <div class="cc"><div class="ct">Progress by Stream</div><div style="padding-top:4px">${details.map(s=>{const p=Math.min(100,s.pct);return`<div class="pi"><div class="ph"><span class="pn">${s.name}</span><span class="pv">${fmtK(s.actual)} / ${fmtK(s.target)} · <strong style="color:${pcC2(s.pct)}">${s.pct.toFixed(1)}%</strong></span></div><div class="pb"><div class="pf" style="width:${p.toFixed(2)}%;background:${pcC2(s.pct)}"></div></div></div>`;}).join('')}</div></div>`;
+    ${grand?`<div class="cc" style="margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <span style="font-size:.88rem;font-weight:700">2026 — YTD vs Annual Target</span>
+        <span style="font-size:.78rem;font-family:'JetBrains Mono',monospace;color:var(--mu)"><strong>${fmtK(grand.actual)}</strong> YTD / ${fmtK(grand.target)} Target · <span style="color:${pcC2(grand.pct)};font-weight:700">${grand.pct.toFixed(1)}%</span></span>
+      </div>
+      <div class="pb" style="height:18px;border-radius:9px"><div class="pf" style="width:${Math.min(100,grand.pct).toFixed(2)}%;background:linear-gradient(90deg,#5b21b6,#10b981)"></div></div>
+      <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:.67rem;color:var(--mu)"><span>0</span><span>Remaining: <strong>${fmtK(remaining)}</strong></span><span>${fmtK(grand.target)}</span></div>
+    </div>`:''}
+    <div class="g4" style="margin-bottom:16px">
+      ${totals.map(s=>`<div class="kpi" style="--c:${pcC2(s.pct)}">
+        <div class="kl">${s.name}</div><div class="kv" style="color:${pcC2(s.pct)}">${fmtK(s.actual)}</div>
+        <div style="margin-top:8px;background:var(--s3);border-radius:4px;height:6px;overflow:hidden"><div style="height:100%;width:${Math.min(100,s.pct).toFixed(1)}%;background:${pcC2(s.pct)};border-radius:4px"></div></div>
+        <div class="ks" style="margin-top:4px">Target: ${fmtK(s.target)} · <strong style="color:${pcC2(s.pct)}">${s.pct.toFixed(1)}%</strong></div>
+      </div>`).join('')}
+      ${grand?`<div class="kpi" style="--c:#7c3aed"><div class="kl">Monthly Run Rate</div><div class="kv" style="color:#7c3aed">${fmtK(runRate)}</div><div class="ks">SAR/month avg · Remaining: ${fmtK(remaining)}</div></div>`:''}
+    </div>
+    <div class="g2" style="margin-bottom:14px">
+      <div class="cc"><div class="ct">Actual vs Target by Segment</div><div style="height:220px"><canvas id="c-p4-bar"></canvas></div></div>
+      <div class="cc"><div class="ct">YTD Achievement Mix</div><div style="height:220px"><canvas id="c-p4-donut"></canvas></div></div>
+    </div>
+    <div class="cc" style="margin-bottom:14px"><div class="ct">Progress by Stream <span class="cs">YTD 2026</span></div><div style="padding-top:4px">
+      ${details.map(s=>{const p=Math.min(100,s.pct);return`<div class="pi"><div class="ph"><span class="pn">${s.name}</span><span class="pv">${fmtK(s.actual)} / ${fmtK(s.target)} · <strong style="color:${pcC2(s.pct)}">${s.pct.toFixed(1)}%</strong></span></div><div class="pb"><div class="pf" style="width:${p.toFixed(2)}%;background:${pcC2(s.pct)}"></div></div></div>`;}).join('')}
+    </div></div>
+    <div class="tw"><table><thead><tr><th>Stream</th><th>YTD Actual</th><th>Annual Target</th><th>Remaining</th><th>Achievement</th></tr></thead><tbody>
+    ${[...totals,...details].map(s=>`<tr><td>${s.name}</td><td class="pos">${fmt(s.actual)}</td><td>${fmt(s.target)}</td><td class="${s.target-s.actual>0?'neg':'pos'}">${fmt(Math.max(0,s.target-s.actual))}</td><td><span style="color:${pcC2(s.pct)};font-weight:700">${s.pct.toFixed(1)}%</span></td></tr>`).join('')}
+    </tbody></table></div>`;
+    dc('p4-bar');CH['p4-bar']=new Chart(document.getElementById('c-p4-bar').getContext('2d'),{
+      type:'bar',data:{labels:totals.map(s=>s.name),datasets:[
+        {label:'YTD Actual',data:totals.map(s=>s.actual),backgroundColor:'rgba(91,33,182,.7)',borderRadius:4},
+        {label:'Annual Target',data:totals.map(s=>s.target),backgroundColor:'rgba(148,163,184,.3)',borderRadius:4},
+      ]},options:copts()});
+    dc('p4-donut');CH['p4-donut']=new Chart(document.getElementById('c-p4-donut').getContext('2d'),{
+      type:'doughnut',data:{labels:totals.map(s=>s.name),datasets:[{data:totals.map(s=>s.actual),backgroundColor:['rgba(59,130,246,.8)','rgba(16,185,129,.8)','rgba(245,158,11,.8)'],borderWidth:0}]},
+      options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{position:'bottom',labels:{color:C.tc,font:{size:11},padding:8}}}}});
   }catch(e){errEl('p4c','Error: '+e.message);}
 }
-
 async function loadBudget(){
   try{
     const raw=await gcsv('Actual spend Vs Budget 2026');
@@ -590,11 +587,45 @@ async function loadBudget(){
     const aR=allR.slice(sp+1).filter(r=>r.dept!=='Total');
     const depts=bR.map(r=>r.dept);
     const actIdx=months.map((m,i)=>aR.some(r=>r.vals[i]>0)||bR.some(r=>r.vals[i]>0)?i:-1).filter(i=>i>=0);
+    const deptSummary=depts.map(d=>{
+      const br=bR.find(r=>r.dept===d),ar=aR.find(r=>r.dept===d);
+      const tb=br?actIdx.reduce((s,i)=>s+(br.vals[i]||0),0):0;
+      const ta=ar?actIdx.reduce((s,i)=>s+(ar.vals[i]||0),0):0;
+      return{dept:d,budget:tb,actual:ta,variance:tb-ta,pct:tb?(ta/tb*100):0};
+    });
+    const grandB=deptSummary.reduce((s,d)=>s+d.budget,0);
+    const grandA=deptSummary.reduce((s,d)=>s+d.actual,0);
+    const grandV=grandB-grandA,grandPct=grandB?(grandA/grandB*100):0;
+    const over=deptSummary.filter(d=>d.variance<0&&d.actual>0);
     document.getElementById('p5c').innerHTML=`
-    <div class="tw"><table><thead><tr><th>Department</th>${actIdx.map(mi=>`<th>${months[mi]} Budget</th><th>Actual</th><th>Variance</th>`).join('')}</tr></thead>
-    <tbody>${depts.map(d=>{const br=bR.find(r=>r.dept===d);const ar=aR.find(r=>r.dept===d);if(!br)return'';return`<tr><td>${d}</td>${actIdx.map(mi=>{const b=br.vals[mi]||0,a=ar?(ar.vals[mi]||0):0,v=b-a;return`<td>${fmt(b)}</td><td class="${a>0?'pos':''}">${fmt(a)}</td><td class="${v>=0?'pos':'neg'}">${v>=0?'+':''}${fmt(v)}</td>`;}).join('')}</tr>`;}).join('')}</tbody>
-    <tfoot><tr class="tf tot"><td>Total</td>${actIdx.map(mi=>{const tb=bR.reduce((s,r)=>s+(r.vals[mi]||0),0),ta=aR.reduce((s,r)=>s+(r.vals[mi]||0),0),tv=tb-ta;return`<td>${fmt(tb)}</td><td class="${ta>0?'pos':''}">${fmt(ta)}</td><td class="${tv>=0?'pos':'neg'}">${tv>=0?'+':''}${fmt(tv)}</td>`;}).join('')}</tr></tfoot>
+    <div class="g4" style="margin-bottom:16px">
+      <div class="kpi" style="--c:#5b21b6"><div class="kl">Total Budget</div><div class="kv">${fmtK(grandB)}</div><div class="ks">SAR · YTD</div></div>
+      <div class="kpi" style="--c:${grandA>grandB?'#ef4444':'#10b981'}"><div class="kl">Total Actual Spend</div><div class="kv" style="color:${grandA>grandB?C.rd:C.gn}">${fmtK(grandA)}</div><div class="ks">${grandPct.toFixed(1)}% of budget used</div></div>
+      <div class="kpi" style="--c:${grandV>=0?'#10b981':'#ef4444'}"><div class="kl">Total Variance</div><div class="kv" style="color:${grandV>=0?C.gn:C.rd}">${grandV>=0?'+':''}${fmtK(grandV)}</div><div class="ks">${grandV>=0?'Under Budget ✓':'Over Budget ⚠'}</div></div>
+      <div class="kpi" style="--c:#f59e0b"><div class="kl">Depts Over Budget</div><div class="kv" style="color:${over.length>0?C.rd:C.gn}">${over.length}</div><div class="ks">out of ${deptSummary.filter(d=>d.actual>0).length} active depts</div></div>
+    </div>
+    <div class="g2" style="margin-bottom:14px">
+      <div class="cc"><div class="ct">Budget vs Actual by Department</div><div style="height:240px"><canvas id="c-p5-bar"></canvas></div></div>
+      <div class="cc"><div class="ct">Spend Distribution</div><div style="height:240px"><canvas id="c-p5-donut"></canvas></div></div>
+    </div>
+    ${over.length>0?`<div class="cc" style="margin-bottom:14px;border-color:#fca5a5"><div class="ct" style="color:#dc2626">⚠ Over Budget Departments</div>
+    ${over.map(d=>`<div class="pi"><div class="ph"><span class="pn">${d.dept}</span><span class="pv" style="color:#dc2626">Over by ${fmtK(Math.abs(d.variance))} (${d.pct.toFixed(1)}% used)</span></div><div class="pb"><div class="pf" style="width:${Math.min(100,d.pct).toFixed(1)}%;background:#ef4444"></div></div></div>`).join('')}
+    </div>`:''}
+    <div class="cc" style="margin-bottom:14px"><div class="ct">Budget Utilization by Department</div>
+    ${deptSummary.filter(d=>d.budget>0).map(d=>{const p=Math.min(100,d.pct),col=d.pct>100?C.rd:d.pct>80?C.am:C.gn;return`<div class="pi"><div class="ph"><span class="pn">${d.dept}</span><span class="pv">${fmtK(d.actual)} / ${fmtK(d.budget)} · <strong style="color:${col}">${d.pct.toFixed(1)}%</strong></span></div><div class="pb"><div class="pf" style="width:${p.toFixed(1)}%;background:${col}"></div></div></div>`;}).join('')}
+    </div>
+    <div class="tw"><table><thead><tr><th>Department</th>${actIdx.map(mi=>`<th>${months[mi]} Bgt</th><th>Act</th><th>Var</th>`).join('')}<th>Total Bgt</th><th>Total Act</th><th>Variance</th><th>%</th></tr></thead>
+    <tbody>${depts.map(d=>{const br=bR.find(r=>r.dept===d),ar=aR.find(r=>r.dept===d);if(!br)return'';const ds=deptSummary.find(x=>x.dept===d);return`<tr><td>${d}</td>${actIdx.map(mi=>{const b=br.vals[mi]||0,a=ar?(ar.vals[mi]||0):0,v=b-a;return`<td>${fmt(b)}</td><td class="${a>0?'pos':''}">${fmt(a)}</td><td class="${v>=0?'pos':'neg'}">${v>=0?'+':''}${fmt(v)}</td>`;}).join('')}<td>${fmt(ds.budget)}</td><td>${fmt(ds.actual)}</td><td class="${ds.variance>=0?'pos':'neg'}">${ds.variance>=0?'+':''}${fmt(ds.variance)}</td><td style="color:${ds.pct>100?C.rd:ds.pct>80?C.am:C.gn};font-weight:700">${ds.pct.toFixed(1)}%</td></tr>`;}).join('')}</tbody>
+    <tfoot><tr class="tf tot"><td>Total</td>${actIdx.map(mi=>{const tb=bR.reduce((s,r)=>s+(r.vals[mi]||0),0),ta=aR.reduce((s,r)=>s+(r.vals[mi]||0),0),tv=tb-ta;return`<td>${fmt(tb)}</td><td>${fmt(ta)}</td><td class="${tv>=0?'pos':'neg'}">${tv>=0?'+':''}${fmt(tv)}</td>`;}).join('')}<td>${fmt(grandB)}</td><td>${fmt(grandA)}</td><td class="${grandV>=0?'pos':'neg'}">${grandV>=0?'+':''}${fmt(grandV)}</td><td style="font-weight:700;color:${grandPct>100?C.rd:grandPct>80?C.am:C.gn}">${grandPct.toFixed(1)}%</td></tr></tfoot>
     </table></div>`;
+    dc('p5-bar');CH['p5-bar']=new Chart(document.getElementById('c-p5-bar').getContext('2d'),{
+      type:'bar',data:{labels:deptSummary.filter(d=>d.budget>0).map(d=>d.dept),datasets:[
+        {label:'Budget',data:deptSummary.filter(d=>d.budget>0).map(d=>d.budget),backgroundColor:'rgba(148,163,184,.4)',borderRadius:4},
+        {label:'Actual',data:deptSummary.filter(d=>d.budget>0).map(d=>d.actual),backgroundColor:deptSummary.filter(d=>d.budget>0).map(d=>d.pct>100?'rgba(239,68,68,.7)':'rgba(91,33,182,.7)'),borderRadius:4},
+      ]},options:copts()});
+    dc('p5-donut');CH['p5-donut']=new Chart(document.getElementById('c-p5-donut').getContext('2d'),{
+      type:'doughnut',data:{labels:deptSummary.filter(d=>d.actual>0).map(d=>d.dept),datasets:[{data:deptSummary.filter(d=>d.actual>0).map(d=>d.actual),backgroundColor:['#5b21b6','#7c3aed','#3b82f6','#10b981','#f59e0b','#ef4444','#06b6d4','#8b5cf6'],borderWidth:0}]},
+      options:{responsive:true,maintainAspectRatio:false,cutout:'50%',plugins:{legend:{position:'right',labels:{color:C.tc,font:{size:10},padding:6}}}}});
   }catch(e){errEl('p5c','Error: '+e.message);}
 }
 
