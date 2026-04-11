@@ -131,13 +131,13 @@ select{background:var(--s2);border:1.5px solid var(--bd2);color:var(--tx);paddin
 </div>
 
 <!-- P2: REVENUE -->
-<div class="page" id="p2"><div class="pt">Revenue Analysis</div><div class="ps">All years · Revenue stream analysis</div><div id="p2c"><div class="ld"><span class="spin"></span>Loading...</div></div></div>
+<div class="page" id="p2"><div class="pt">Revenue Analysis</div><div class="ps">All years · Revenue stream analysis</div><div id="p2-content"><div class="ld"><span class="spin"></span>Loading...</div></div></div>
 
 <!-- P2C: REV COMPARE -->
 <div class="page" id="p2c"><div class="pt">Revenue Comparison</div><div class="ps">Compare two periods side by side</div><div id="p2cc"><div class="ld"><span class="spin"></span>Loading...</div></div></div>
 
 <!-- P3: P&L -->
-<div class="page" id="p3"><div class="pt">P&L Monthly</div><div class="ps">P&L sheet · all months 2019→2026</div><div id="p3c"><div class="ld"><span class="spin"></span>Loading...</div></div></div>
+<div class="page" id="p3"><div class="pt">P&L Monthly</div><div class="ps">P&L sheet · all months 2019→2026</div><div id="p3-content"><div class="ld"><span class="spin"></span>Loading...</div></div></div>
 
 <!-- P3C: P&L COMPARE -->
 <div class="page" id="p3c"><div class="pt">P&L Comparison</div><div class="ps">Compare two years side by side</div><div id="p3cc"><div class="ld"><span class="spin"></span>Loading...</div></div></div>
@@ -250,7 +250,7 @@ async function loadRevenue(){
   try{
     if(!_D) _D=await fetchData('all');
     renderRevenue();
-  }catch(e){errEl('p2c','Error: '+e.message);}
+  }catch(e){errEl('p2-content','Error: '+e.message);}
 }
 
 function getRevIdx(dates,yr,q){
@@ -293,7 +293,7 @@ function renderRevenue(){
   const totKPI=ytdKPI.B2C+ytdKPI.B2B+ytdKPI.B2G;
   const SC={B2C:C.b2c,B2B:C.b2b,B2G:C.b2g};
 
-  document.getElementById('p2c').innerHTML=`
+  document.getElementById('p2-content').innerHTML=`
   <div class="fb">
     <div class="fg"><div class="fl">Segment</div><div class="chips">
       <span class="chip ${st.seg==='all'?'on':''}" onclick="setRF('seg','all')">All</span>
@@ -322,7 +322,7 @@ function renderRevenue(){
   <div class="tw"><table><thead><tr><th>Segment</th><th>Product</th>${dispL.map(m=>`<th>${m}</th>`).join('')}<th>Total</th></tr></thead><tbody>
   ${[...fp.B2C,...fp.B2B,...fp.B2G].sort((a,b)=>sumIdx([b],ix26)-sumIdx([a],ix26)).map(p=>{
     const rt=sumIdx([p],dispIdx);
-    return`<tr><td><span class="bdg ${p.seg.toLowerCase()}d">${p.seg}</span> ${p.name}</td><td style="display:none"></td>${dispIdx.map(i=>{const v=p.vals[i]||0;return`<td class="${v>0?'pos':''}}">${v>0?fmtK(v):'—'}</td>`;}).join('')}<td class="pos" style="font-weight:700">${fmtK(rt)}</td></tr>`;
+    return`<tr><td><span class="bdg ${(p.seg||'b2g').toLowerCase()}d">${p.seg||''}</span> ${p.name}</td><td style="display:none"></td>${dispIdx.map(i=>{const v=p.vals[i]||0;return`<td class="${v>0?'pos':''}}">${v>0?fmtK(v):'—'}</td>`;}).join('')}<td class="pos" style="font-weight:700">${fmtK(rt)}</td></tr>`;
   }).join('')}
   </tbody></table></div>`;
 
@@ -409,7 +409,7 @@ async function loadPL(){
     if(!_D) _D=await fetchData('all');
     const {pl}=_D;
     const years=[...new Set(pl.dates.map(d=>d.split(' ')[1]).filter(Boolean))].sort();
-    document.getElementById('p3c').innerHTML=`
+    document.getElementById('p3-content').innerHTML=`
     <div class="fb" style="margin-bottom:14px">
       <div class="fg"><div class="fl">Year</div><div class="chips" id="pl-yr-chips">
         ${years.map(y=>`<span class="chip ${y==='2026'?'on':''}" onclick="setPLYear('${y}')">${y}</span>`).join('')}
@@ -431,7 +431,7 @@ async function loadPL(){
     </div>
     <div class="tw" id="plTW"></div>`;
     renderPLFull();
-  }catch(e){errEl('p3c','Error: '+e.message);console.error(e);}
+  }catch(e){errEl('p3-content','Error: '+e.message);console.error(e);}
 }
 
 function setPLYear(y){window._plY=y;document.querySelectorAll('#pl-yr-chips .chip').forEach(c=>c.classList.toggle('on',c.textContent===y));renderPLFull();}
